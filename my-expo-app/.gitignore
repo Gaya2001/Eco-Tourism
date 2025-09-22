@@ -21,3 +21,12 @@ android
 
 # Temporary files created by Metro to check the health of the file watcher
 .metro-health-check*
+
+# JetBrains / Android Studio
+/.idea/
+*.iml
+
+# User-specific files
+/.idea/*workspace.xml
+/.idea/*tasks.xml
+/.idea/*workspace.xml
