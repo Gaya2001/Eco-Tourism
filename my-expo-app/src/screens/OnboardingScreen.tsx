@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: Theme.spacing.lg,
-    marginTop: Theme.spacing.md,
+    marginTop: Theme.spacing.xs,
   },
   counter: {
     color: Colors.neutral[500],
@@ -218,13 +218,12 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   imageWrapper: {
-    marginTop: 20,
     width: '100%',
     alignItems: 'center',
   },
   imageBox: {
     width: 280,
-    height: 220,
+    height: 160,
     borderRadius: 20,
     justifyContent: 'center',
     alignItems: 'center',
@@ -346,9 +345,10 @@ const styles = StyleSheet.create({
   welcomeCard: {
     width: '90%',
     backgroundColor: Colors.white,
-    marginTop: 24,
+    marginTop: 16,
     borderRadius: Theme.borderRadius.xl,
-    padding: Theme.spacing.xl,
+    padding: Theme.spacing.md,
+    paddingHorizontal: Theme.spacing.xl,
     alignItems: 'center',
     ...Theme.shadows.lg,
   },
@@ -356,18 +356,17 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: '800',
     textAlign: 'center',
-    marginTop: 8,
     marginBottom: Theme.spacing.sm,
   },
   welcomeDescription: {
     fontSize: 14,
     color: Colors.neutral[600],
     textAlign: 'center',
-    marginBottom: Theme.spacing.lg,
+    marginBottom: Theme.spacing.xs,
   },
   bulletsList: {
     width: '100%',
-    marginTop: Theme.spacing.md,
+    marginTop: Theme.spacing.xs,
   },
   bulletRow: {
     flexDirection: 'row',
