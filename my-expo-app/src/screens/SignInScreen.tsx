@@ -10,22 +10,24 @@ import {
   Platform,
   Dimensions,
   ScrollView,
+  ImageBackground,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+// LinearGradient intentionally removed for background in this screen
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Colors, Theme } from '../constants';
+// Colors/Theme not used in this screen
 import { LoadingSpinner } from '../components';
 
-const { width, height } = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 const isSmallScreen = width < 380;
-const isShortScreen = height < 700;
 
 interface SignInScreenProps {
   onSignIn: (credentials: any) => void;
   onNavigateToSignUp: () => void;
   onForgotPassword: () => void;
 }
+
+const ECO_BG = { uri: 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=1400&auto=format&fit=crop&ixlib=rb-4.0.3&s=3b5d6b1c3a2f7f1b9a6b' };
 
 const SignInScreen: React.FC<SignInScreenProps> = ({ 
   onSignIn, 
@@ -67,7 +69,7 @@ const SignInScreen: React.FC<SignInScreenProps> = ({
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 2000));
       onSignIn(formData);
-    } catch (error) {
+    } catch {
       Alert.alert('Error', 'Invalid credentials. Please try again.');
     } finally {
       setIsLoading(false);
@@ -79,10 +81,10 @@ const SignInScreen: React.FC<SignInScreenProps> = ({
   };
 
   return (
-    <LinearGradient
-      colors={['#a8e6cf', '#dcedc1']}
-      style={styles.container}
-    >
+    <ImageBackground source={ECO_BG} resizeMode="cover" style={styles.container}>
+      {/* subtle dark overlay for contrast */}
+      <View style={styles.overlay} />
+
       {/* Background decorative elements */}
       <View style={styles.decorativeElements}>
         <View style={[styles.decorativeCircle, styles.orangeCircle]} />
@@ -189,7 +191,7 @@ const SignInScreen: React.FC<SignInScreenProps> = ({
 
                 {/* Sign Up Link */}
                 <View style={styles.signUpContainer}>
-                  <Text style={styles.signUpText}>Don't have an account? </Text>
+                  <Text style={styles.signUpText}>Don&apos;t have an account? </Text>
                   <TouchableOpacity onPress={onNavigateToSignUp}>
                     <Text style={styles.signUpLink}>Sign Up</Text>
                   </TouchableOpacity>
@@ -200,13 +202,18 @@ const SignInScreen: React.FC<SignInScreenProps> = ({
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
-    </LinearGradient>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    // stronger green tint + higher opacity for darker, eco-friendly feel
+    backgroundColor: 'rgba(6,78,42,0.64)',
   },
   decorativeElements: {
     position: 'absolute',

@@ -8,11 +8,10 @@ import {
   TouchableOpacity,
   ViewToken
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Colors, Theme } from '../constants';
-import { Button } from '../components';
+// ...existing code... (Button component not used in this screen)
 
 const { width, height } = Dimensions.get('window');
 
@@ -24,14 +23,16 @@ interface OnboardingItem {
   icon: keyof typeof Ionicons.glyphMap;
   backgroundColor: string;
   iconColor: string;
+  // optional bullets for final screen
+  bullets?: { icon: keyof typeof Ionicons.glyphMap; text: string; bgColor: string }[];
 }
 
 const onboardingData: OnboardingItem[] = [
   {
     id: '1',
-    title: 'Reduce & Recycle',
-    subtitle: 'Make a Difference',
-    description: 'Join thousands of eco-warriors in reducing waste and protecting our planet through smart recycling habits.',
+    title: 'Discover Eco-Friendly Stays',
+    subtitle: 'Find unique sustainable accommodations',
+    description: 'Find unique sustainable accommodations that respect nature while providing unforgettable experiences',
     icon: 'leaf',
     backgroundColor: Colors.primary[500],
     iconColor: Colors.white,
@@ -63,6 +64,20 @@ const onboardingData: OnboardingItem[] = [
     backgroundColor: '#84cc16', // Light green
     iconColor: Colors.white,
   },
+  {
+    id: '5',
+    title: 'Welcome to Eco-Ranger',
+    subtitle: '',
+    description: 'Connect with local businesses and discover authentic experiences wherever you go',
+    icon: 'map',
+    backgroundColor: Colors.white,
+    iconColor: Colors.primary[500],
+    bullets: [
+      { icon: 'map', text: 'Discover local attractions', bgColor: '#e6f0ff' },
+      { icon: 'business', text: 'Connect with businesses', bgColor: '#e9fbe9' },
+      { icon: 'star', text: 'Authentic experiences', bgColor: '#f6e9ff' },
+    ],
+  },
 ];
 
 interface OnboardingScreenProps {
@@ -93,47 +108,60 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
     }
   };
 
-  const renderOnboardingItem = ({ item }: { item: OnboardingItem }) => (
-    <LinearGradient
-      colors={['#f0fdf4', '#dbeafe']} // Light green to light blue
-      style={styles.slide}
-    >
-      {/* Background decorations */}
-      <View style={[styles.backgroundCircle, styles.topCircle]} />
-      <View style={[styles.backgroundCircle, styles.bottomCircle]} />
-
-      {/* Small decorative icon at top */}
-      <View style={styles.topIcon}>
-        <Ionicons name={item.icon} size={20} color={item.backgroundColor} />
+  const renderOnboardingItem = ({ item, index }: { item: OnboardingItem; index: number }) => (
+    <View style={styles.slide}>
+      {/* Top bar: counter and Skip */}
+      <View style={styles.topBar}>
+        <Text style={styles.counter}>{`${index + 1} / ${onboardingData.length}`}</Text>
+        <TouchableOpacity onPress={handleSkip}>
+          <Text style={styles.skipText}>Skip</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Main icon circle */}
-      <View style={[styles.iconContainer, { backgroundColor: item.backgroundColor }]}>
-        <Ionicons name={item.icon} size={60} color={item.iconColor} />
-      </View>
-
-      {/* Content card */}
-      <View style={styles.contentCard}>
-        <Text style={[styles.title, { color: item.backgroundColor }]}>{item.title}</Text>
-        <Text style={styles.subtitle}>{item.subtitle}</Text>
-        <Text style={styles.description}>{item.description}</Text>
-
-        {/* Progress dots */}
-        <View style={styles.dotsContainer}>
-          {onboardingData.map((_, index) => (
-            <View
-              key={index}
-              style={[
-                styles.dot,
-                {
-                  backgroundColor: index === currentIndex ? item.backgroundColor : Colors.neutral[300],
-                }
-              ]}
-            />
-          ))}
+      {/* Large rounded image placeholder (use icon circle as image) */}
+      <View style={styles.imageWrapper}>
+        <View style={[styles.imageBox, { backgroundColor: item.backgroundColor }]}> 
+          <Ionicons name={item.icon} size={80} color={item.iconColor} />
         </View>
       </View>
-    </LinearGradient>
+
+      {/* Card-like content or final welcome layout */}
+      {item.bullets ? (
+        <View style={styles.welcomeCard}>
+          <Text style={styles.welcomeHeading}>{item.title}</Text>
+          <Text style={styles.welcomeDescription}>{item.description}</Text>
+
+          <View style={styles.bulletsList}>
+            {item.bullets.map((b, i) => (
+              <View style={styles.bulletRow} key={i}>
+                <View style={[styles.bulletIcon, { backgroundColor: b.bgColor }]}>
+                  <Ionicons name={b.icon} size={18} color={Colors.primary[500] as any} />
+                </View>
+                <Text style={styles.bulletText}>{b.text}</Text>
+              </View>
+            ))}
+          </View>
+        </View>
+      ) : (
+        <View style={styles.cardContainer}>
+          <Text style={styles.heading}>{item.title}</Text>
+          <Text style={styles.cardDescription}>{item.description}</Text>
+
+          {/* Progress dots */}
+          <View style={styles.dotsContainer}>
+            {onboardingData.map((_, idx) => (
+              <View
+                key={idx}
+                style={[
+                  styles.dot,
+                  { backgroundColor: idx === currentIndex ? Colors.primary[500] : Colors.neutral[300] }
+                ]}
+              />
+            ))}
+          </View>
+        </View>
+      )}
+    </View>
   );
 
   return (
@@ -152,21 +180,9 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
 
       {/* Bottom actions */}
       <View style={styles.navigationContainer}>
-        {currentIndex === onboardingData.length - 1 ? (
-          <Button
-            title="Start Adventure!"
-            variant="primary"
-            onPress={onComplete}
-            style={styles.actionButton}
-          />
-        ) : (
-          <TouchableOpacity 
-            style={styles.skipButton}
-            onPress={handleSkip}
-          >
-            <Text style={styles.skipButtonText}>Skip</Text>
-          </TouchableOpacity>
-        )}
+        <TouchableOpacity style={styles.continueButton} onPress={handleNext}>
+          <Text style={styles.continueButtonText}>{currentIndex === onboardingData.length - 1 ? 'Get Started' : 'Continue'}</Text>
+        </TouchableOpacity>
       </View>
     </SafeAreaView>
   );
@@ -184,6 +200,56 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: Theme.spacing.lg,
     position: 'relative',
+  },
+  topBar: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: Theme.spacing.lg,
+    marginTop: Theme.spacing.xs,
+  },
+  counter: {
+    color: Colors.neutral[500],
+    fontWeight: '600',
+  },
+  skipText: {
+    color: Colors.neutral[500],
+    fontWeight: '600',
+  },
+  imageWrapper: {
+    width: '100%',
+    alignItems: 'center',
+  },
+  imageBox: {
+    width: 280,
+    height: 160,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...Theme.shadows.lg,
+  },
+  cardContainer: {
+    width: '90%',
+    backgroundColor: Colors.white,
+    marginTop: 24,
+    borderRadius: Theme.borderRadius.xl,
+    padding: Theme.spacing.lg,
+    alignItems: 'center',
+    ...Theme.shadows.lg,
+  },
+  heading: {
+    fontSize: 22,
+    fontWeight: '700',
+    textAlign: 'center',
+    marginBottom: Theme.spacing.sm,
+  },
+  cardDescription: {
+    fontSize: 14,
+    color: Colors.neutral[600],
+    textAlign: 'center',
+    lineHeight: 20,
+    marginBottom: Theme.spacing.lg,
   },
   backgroundCircle: {
     position: 'absolute',
@@ -262,6 +328,62 @@ const styles = StyleSheet.create({
     right: 0,
     alignItems: 'center',
     paddingHorizontal: Theme.spacing.lg,
+  },
+  continueButton: {
+    backgroundColor: Colors.primary[500],
+    paddingVertical: Theme.spacing.md,
+    paddingHorizontal: Theme.spacing.xl,
+    borderRadius: Theme.borderRadius.md,
+    minWidth: 220,
+    alignItems: 'center',
+  },
+  continueButtonText: {
+    color: Colors.white,
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  welcomeCard: {
+    width: '90%',
+    backgroundColor: Colors.white,
+    marginTop: 16,
+    borderRadius: Theme.borderRadius.xl,
+    padding: Theme.spacing.md,
+    paddingHorizontal: Theme.spacing.xl,
+    alignItems: 'center',
+    ...Theme.shadows.lg,
+  },
+  welcomeHeading: {
+    fontSize: 24,
+    fontWeight: '800',
+    textAlign: 'center',
+    marginBottom: Theme.spacing.sm,
+  },
+  welcomeDescription: {
+    fontSize: 14,
+    color: Colors.neutral[600],
+    textAlign: 'center',
+    marginBottom: Theme.spacing.xs,
+  },
+  bulletsList: {
+    width: '100%',
+    marginTop: Theme.spacing.xs,
+  },
+  bulletRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: Theme.spacing.sm,
+  },
+  bulletIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: Theme.spacing.md,
+  },
+  bulletText: {
+    fontSize: 14,
+    color: Colors.neutral[700],
   },
   actionButton: {
     paddingHorizontal: 40,

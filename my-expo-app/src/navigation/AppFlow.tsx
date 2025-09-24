@@ -6,11 +6,12 @@ import {
   RoleSelectionScreen, 
   SignUpScreen, 
   SignInScreen, 
-  DashboardScreen 
+  DashboardScreen,
+  WelcomeScreen,
 } from '../screens';
 import { Colors } from '../constants';
 
-type AppFlow = 'splash' | 'onboarding' | 'roleSelection' | 'signUp' | 'signIn' | 'dashboard';
+type AppFlow = 'splash' | 'onboarding' | 'welcome' | 'roleSelection' | 'signUp' | 'signIn' | 'dashboard';
 
 interface User {
   id: string;
@@ -25,7 +26,7 @@ const AppFlow: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleOnboardingComplete = () => {
-    setCurrentFlow('roleSelection');
+    setCurrentFlow('welcome');
   };
 
   const handleRoleSelect = (role: string) => {
@@ -103,10 +104,18 @@ const AppFlow: React.FC = () => {
     
     case 'onboarding':
       return <OnboardingScreen onComplete={handleOnboardingComplete} />;
-    
+
+    case 'welcome':
+      return (
+        <WelcomeScreen
+          onCreateAccount={() => setCurrentFlow('signUp')}
+          onSignIn={() => setCurrentFlow('signIn')}
+        />
+      );
+
     case 'roleSelection':
       return <RoleSelectionScreen onRoleSelect={handleRoleSelect} />;
-    
+
     case 'signUp':
       return (
         <SignUpScreen 
