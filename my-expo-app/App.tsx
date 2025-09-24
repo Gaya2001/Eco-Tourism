@@ -1,12 +1,12 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import AppFlow from './src/navigation/AppFlow';
+import { AllEventsScreen } from './src/screens';
 import './global.css';
 
 export default function App() {
   return (
     <>
-      <AppFlow />
+      <AllEventsScreen />
       <StatusBar style="light" />
     </>
   );

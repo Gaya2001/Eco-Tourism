@@ -1,16 +1,11 @@
 import React, { useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { 
-  SplashScreen, 
-  OnboardingScreen, 
-  RoleSelectionScreen, 
-  SignUpScreen, 
-  SignInScreen, 
-  DashboardScreen 
+  AllEventsScreen 
 } from '../screens';
 import { Colors } from '../constants';
 
-type AppFlow = 'splash' | 'onboarding' | 'roleSelection' | 'signUp' | 'signIn' | 'dashboard';
+type AppFlow = 'splash' | 'onboarding' | 'roleSelection' | 'signUp' | 'signIn' | 'dashboard' | 'allEvents';
 
 interface User {
   id: string;
@@ -23,6 +18,10 @@ const AppFlow: React.FC = () => {
   const [currentFlow, setCurrentFlow] = useState<AppFlow>('splash');
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleAllEvents = () => {
+    setCurrentFlow('allEvents');
+  };
 
   const handleOnboardingComplete = () => {
     setCurrentFlow('roleSelection');
@@ -95,48 +94,13 @@ const AppFlow: React.FC = () => {
         <ActivityIndicator size="large" color={Colors.primary[500]} />
       </View>
     );
-  }
+  } 
 
   switch (currentFlow) {
-    case 'splash':
-      return <SplashScreen onFinish={() => setCurrentFlow('onboarding')} />;
-    
-    case 'onboarding':
-      return <OnboardingScreen onComplete={handleOnboardingComplete} />;
-    
-    case 'roleSelection':
-      return <RoleSelectionScreen onRoleSelect={handleRoleSelect} />;
-    
-    case 'signUp':
-      return (
-        <SignUpScreen 
-          onSignUp={handleSignUp}
-          onNavigateToSignIn={handleNavigateToSignIn}
-        />
-      );
-    
-    case 'signIn':
-      return (
-        <SignInScreen 
-          onSignIn={handleSignIn}
-          onNavigateToSignUp={handleNavigateToSignUp}
-          onForgotPassword={handleForgotPassword}
-        />
-      );
-    
-    case 'dashboard':
-      return (
-        <DashboardScreen 
-          user={{
-            name: user?.name || 'User',
-            level: 3,
-            ecoPoints: 1250,
-          }}
-        />
-      );
-    
+    case 'allEvents':
+      return <AllEventsScreen />;
     default:
-      return <SplashScreen onFinish={() => setCurrentFlow('onboarding')} />;
+      return null;
   }
 };
 
