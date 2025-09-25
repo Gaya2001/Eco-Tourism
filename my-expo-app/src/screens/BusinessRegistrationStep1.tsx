@@ -113,14 +113,14 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
     <View className="relative">
       <TouchableOpacity
         onPress={onToggle}
-        className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-4 flex-row items-center justify-between"
+        className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 flex-row items-center justify-between"
       >
-        <Text className={value ? 'text-gray-900' : 'text-gray-500'}>
+        <Text className={`text-base ${value ? 'text-gray-900' : 'text-gray-500'}`}>
           {value || placeholder}
         </Text>
         <Ionicons 
           name={isOpen ? 'chevron-up' : 'chevron-down'} 
-          size={20} 
+          size={18} 
           color="#6B7280" 
         />
       </TouchableOpacity>
@@ -151,55 +151,55 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
       <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
       
       {/* Header */}
-      <View className="bg-white px-4 py-4 border-b border-gray-200">
-        <View className="flex-row items-center mb-4">
-          <TouchableOpacity className="w-10 h-10 items-center justify-center -ml-2">
-            <Ionicons name="arrow-back" size={24} color="#1F2937" />
+      <View className="bg-white px-4 py-7 border-b border-gray-100">
+        <View className="flex-row items-center mb-1">
+          <TouchableOpacity className="p-2 -ml-2">
+            <Ionicons name="arrow-back" size={22} color="#374151" />
           </TouchableOpacity>
-          <View className="flex-1 items-center">
-            <Text className="text-xl font-bold text-gray-900">Business Registration</Text>
+          <View className="flex-1 items-center -ml-8">
+            <Text className="text-lg font-semibold text-gray-900">Business Registration</Text>
           </View>
-          <View className="w-10" />
+          <View className="w-8" />
         </View>
         
         {/* Progress Bar */}
-        <View className="mb-2">
-          <View className="flex-row items-center justify-between mb-2">
-            <Text className="text-green-600 text-sm font-medium">Step 1 of 3</Text>
-            <Text className="text-gray-500 text-sm">33%</Text>
+        <View className="mb-3">
+          <View className="flex-row items-center justify-between mb-3">
+            <Text className="text-green-600 text-sm font-semibold">Step 1 of 3</Text>
+            <Text className="text-gray-500 text-sm font-medium">33%</Text>
           </View>
-          <View className="w-full h-2 bg-gray-200 rounded-full">
-            <View className="w-1/3 h-2 bg-green-500 rounded-full" />
+          <View className="w-full h-2.5 bg-gray-200 rounded-full">
+            <View className="w-1/3 h-2.5 bg-green-500 rounded-full" />
           </View>
         </View>
         
-        <Text className="text-gray-600 text-sm mt-2">
+        <Text className="text-gray-600 text-sm mt-3 leading-5">
           Let's start with the basics about your business
         </Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
-        <View className="px-4 py-6">
+        <View className="px-4 py-5">
           {/* Business Name */}
-          <View className="mb-6">
-            <Text className="text-gray-900 font-semibold mb-2">
+          <View className="mb-5">
+            <Text className="text-gray-900 font-semibold mb-3 text-base">
               Business Name <Text className="text-red-500">*</Text>
             </Text>
-            <View className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-4 flex-row items-center">
+            <View className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 flex-row items-center">
               <TextInput
                 placeholder="Enter your business name"
                 value={formData.businessName}
                 onChangeText={(text) => setFormData({...formData, businessName: text})}
-                className="flex-1 text-gray-900"
+                className="flex-1 text-gray-900 text-base"
                 placeholderTextColor="#9CA3AF"
               />
-              <Ionicons name="business" size={20} color="#9CA3AF" />
+              <Ionicons name="business" size={18} color="#9CA3AF" />
             </View>
           </View>
 
           {/* Business Type */}
-          <View className="mb-6">
-            <Text className="text-gray-900 font-semibold mb-2">
+          <View className="mb-5">
+            <Text className="text-gray-900 font-semibold mb-3 text-base">
               Business Type <Text className="text-red-500">*</Text>
             </Text>
             <CustomDropdown
@@ -216,8 +216,8 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
           </View>
 
           {/* Industry */}
-          <View className="mb-6">
-            <Text className="text-gray-900 font-semibold mb-2">Industry</Text>
+          <View className="mb-5">
+            <Text className="text-gray-900 font-semibold mb-3 text-base">Industry</Text>
             <CustomDropdown
               value={formData.industry}
               placeholder="Select industry"
@@ -232,106 +232,106 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
           </View>
 
           {/* Contact Information Section */}
-          <Text className="text-xl font-bold text-gray-900 mb-4 mt-6">Contact Information</Text>
+          <Text className="text-lg font-bold text-gray-900 mb-4 mt-6">Contact Information</Text>
 
           {/* Business Email */}
-          <View className="mb-6">
-            <Text className="text-gray-900 font-semibold mb-2">
+          <View className="mb-5">
+            <Text className="text-gray-900 font-semibold mb-3 text-base">
               Business Email <Text className="text-red-500">*</Text>
             </Text>
-            <View className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-4 flex-row items-center">
+            <View className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 flex-row items-center">
               <TextInput
                 placeholder="business@company.com"
                 value={formData.businessEmail}
                 onChangeText={(text) => setFormData({...formData, businessEmail: text})}
-                className="flex-1 text-gray-900"
+                className="flex-1 text-gray-900 text-base"
                 placeholderTextColor="#9CA3AF"
                 keyboardType="email-address"
                 autoCapitalize="none"
               />
-              <Ionicons name="mail" size={20} color="#9CA3AF" />
+              <Ionicons name="mail" size={18} color="#9CA3AF" />
             </View>
           </View>
 
           {/* Phone Number */}
-          <View className="mb-6">
-            <Text className="text-gray-900 font-semibold mb-2">
+          <View className="mb-5">
+            <Text className="text-gray-900 font-semibold mb-3 text-base">
               Phone Number <Text className="text-red-500">*</Text>
             </Text>
-            <View className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-4 flex-row items-center">
+            <View className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 flex-row items-center">
               <TextInput
                 placeholder="+1 (555) 123-4567"
                 value={formData.phoneNumber}
                 onChangeText={(text) => setFormData({...formData, phoneNumber: text})}
-                className="flex-1 text-gray-900"
+                className="flex-1 text-gray-900 text-base"
                 placeholderTextColor="#9CA3AF"
                 keyboardType="phone-pad"
               />
-              <Ionicons name="call" size={20} color="#9CA3AF" />
+              <Ionicons name="call" size={18} color="#9CA3AF" />
             </View>
           </View>
 
           {/* Website */}
-          <View className="mb-6">
-            <Text className="text-gray-900 font-semibold mb-2">Website</Text>
-            <View className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-4 flex-row items-center">
+          <View className="mb-5">
+            <Text className="text-gray-900 font-semibold mb-3 text-base">Website</Text>
+            <View className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 flex-row items-center">
               <TextInput
                 placeholder="www.yourcompany.com"
                 value={formData.website}
                 onChangeText={(text) => setFormData({...formData, website: text})}
-                className="flex-1 text-gray-900"
+                className="flex-1 text-gray-900 text-base"
                 placeholderTextColor="#9CA3AF"
                 keyboardType="url"
                 autoCapitalize="none"
               />
-              <Ionicons name="globe" size={20} color="#9CA3AF" />
+              <Ionicons name="globe" size={18} color="#9CA3AF" />
             </View>
-            <Text className="text-gray-500 text-sm mt-1">
+            <Text className="text-gray-500 text-sm mt-2 leading-4">
               Optional - Add your company website if available
             </Text>
           </View>
 
           {/* Business Description */}
-          <View className="mb-8">
-            <Text className="text-gray-900 font-semibold mb-2">Business Description</Text>
-            <View className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-4">
+          <View className="mb-6">
+            <Text className="text-gray-900 font-semibold mb-3 text-base">Business Description</Text>
+            <View className="bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
               <TextInput
                 placeholder="Tell us about your business..."
                 value={formData.businessDescription}
                 onChangeText={(text) => setFormData({...formData, businessDescription: text})}
-                className="text-gray-900 min-h-24"
+                className="text-gray-900 min-h-20 text-base"
                 placeholderTextColor="#9CA3AF"
                 multiline
                 textAlignVertical="top"
               />
             </View>
-            <Text className="text-gray-500 text-sm mt-1">
+            <Text className="text-gray-500 text-sm mt-2 leading-4">
               Optional - Brief description of your business activities
             </Text>
           </View>
 
           {/* Action Buttons */}
-          <View className="flex-row space-x-3 mb-6">
+          <View className="flex-row mb-5 mt-6">
             <TouchableOpacity
               onPress={handleSaveDraft}
-              className="flex-1 bg-gray-200 py-4 rounded-xl"
+              className="flex-1 bg-gray-200 py-3.5 rounded-xl mr-3"
             >
-              <Text className="text-gray-700 font-semibold text-center">Save Draft</Text>
+              <Text className="text-gray-700 font-semibold text-center text-base">Save Draft</Text>
             </TouchableOpacity>
             
             <TouchableOpacity
               onPress={handleNext}
-              className="flex-1 bg-green-500 py-4 rounded-xl"
+              className="flex-1 bg-green-500 py-3.5 rounded-xl"
             >
               <View className="flex-row items-center justify-center">
-                <Text className="text-white font-semibold mr-2">Continue</Text>
+                <Text className="text-white font-semibold mr-2 text-base">Continue</Text>
                 <Ionicons name="arrow-forward" size={16} color="white" />
               </View>
             </TouchableOpacity>
           </View>
 
           {/* Required Fields Note */}
-          <Text className="text-gray-500 text-sm text-center">
+          <Text className="text-gray-500 text-sm text-center leading-4">
             <Text className="text-red-500">*</Text> Required fields
           </Text>
         </View>

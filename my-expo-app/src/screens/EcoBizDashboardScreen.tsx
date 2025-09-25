@@ -136,21 +136,22 @@ const EcoBizDashboardScreen: React.FC = () => {
       <StatusBar barStyle="light-content" backgroundColor="#10B981" />
       
       {/* Header */}
-      <View className="bg-green-500 px-4 py-6">
-        <View className="flex-row items-center justify-between mb-4">
+      <View className="bg-green-500 px-5 py-6">
+        <View className="flex-row items-center justify-between mb-5">
           <View className="flex-row items-center">
-            <View className="w-10 h-10 bg-green-600 rounded-full items-center justify-center mr-3">
-              <Text className="text-white font-bold text-lg">E</Text>
+            <View className="w-12 h-12 bg-green-600 rounded-full items-center justify-center mr-3">
+              <Text className="text-white font-bold text-xl">E</Text>
             </View>
-            <Text className="text-white text-lg font-semibold">EcoBiz</Text>
+            <Text className="text-white text-xl font-semibold">EcoBiz</Text>
+            <Text className="text-green-100 text-sm ml-2 mt-1">Dashboard</Text>
           </View>
-          <View className="flex-row items-center space-x-3">
-            <TouchableOpacity>
+          <View className="flex-row items-center">
+            <TouchableOpacity className="w-10 h-10 items-center justify-center mr-2">
               <Ionicons name="notifications-outline" size={24} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity className="w-8 h-8 bg-orange-500 rounded-full items-center justify-center">
-              <View className="w-2 h-2 bg-red-500 rounded-full absolute -top-1 -right-1" />
-              <Ionicons name="person" size={16} color="white" />
+            <TouchableOpacity className="w-10 h-10 bg-orange-500 rounded-full items-center justify-center relative">
+              <View className="w-3 h-3 bg-red-500 rounded-full absolute -top-1 -right-1 border-2 border-green-500" />
+              <Ionicons name="person" size={18} color="white" />
             </TouchableOpacity>
           </View>
         </View>
@@ -181,29 +182,29 @@ const EcoBizDashboardScreen: React.FC = () => {
           </View>
 
           {/* Status Items */}
-          <View className="flex-row justify-between">
-            <View className="items-center flex-1">
-              <View className="w-12 h-12 bg-green-100 rounded-xl items-center justify-center mb-2">
-                <Ionicons name="business" size={24} color="#10B981" />
+          <View className="flex-row justify-between px-2">
+            <View className="items-center flex-1 mx-2">
+              <View className="w-14 h-14 bg-green-100 rounded-2xl items-center justify-center mb-3">
+                <Ionicons name="business" size={28} color="#10B981" />
               </View>
-              <Text className="text-xs text-gray-600 text-center mb-1">Company Info</Text>
-              <Text className="text-xs text-green-600 font-medium">Complete</Text>
+              <Text className="text-sm text-gray-600 text-center mb-1 font-medium">Company Info</Text>
+              <Text className="text-sm text-green-600 font-semibold">Complete</Text>
             </View>
             
-            <View className="items-center flex-1">
-              <View className="w-12 h-12 bg-orange-100 rounded-xl items-center justify-center mb-2">
-                <Ionicons name="star" size={24} color="#F59E0B" />
+            <View className="items-center flex-1 mx-2">
+              <View className="w-14 h-14 bg-orange-100 rounded-2xl items-center justify-center mb-3">
+                <Ionicons name="star" size={28} color="#F59E0B" />
               </View>
-              <Text className="text-xs text-gray-600 text-center mb-1">Certifications</Text>
-              <Text className="text-xs text-orange-600 font-medium">Pending</Text>
+              <Text className="text-sm text-gray-600 text-center mb-1 font-medium">Certifications</Text>
+              <Text className="text-sm text-orange-600 font-semibold">Pending</Text>
             </View>
             
-            <View className="items-center flex-1">
-              <View className="w-12 h-12 bg-gray-100 rounded-xl items-center justify-center mb-2">
-                <Ionicons name="document" size={24} color="#6B7280" />
+            <View className="items-center flex-1 mx-2">
+              <View className="w-14 h-14 bg-gray-100 rounded-2xl items-center justify-center mb-3">
+                <Ionicons name="document" size={28} color="#6B7280" />
               </View>
-              <Text className="text-xs text-gray-600 text-center mb-1">Documents</Text>
-              <Text className="text-xs text-gray-500 font-medium">Incomplete</Text>
+              <Text className="text-sm text-gray-600 text-center mb-1 font-medium">Documents</Text>
+              <Text className="text-sm text-gray-500 font-semibold">Incomplete</Text>
             </View>
           </View>
         </View>
@@ -271,34 +272,34 @@ const EcoBizDashboardScreen: React.FC = () => {
           <View className="flex-row flex-wrap justify-between">
             {certifications.map((cert) => (
               <View key={cert.id} className="w-[48%] mb-4">
-                <View className="border border-gray-200 rounded-2xl p-3">
-                  <View className="flex-row items-center justify-between mb-2">
-                    <View className={`w-8 h-8 rounded-full items-center justify-center ${getStatusColor(cert.status)}`}>
+                <View className="border border-gray-200 rounded-2xl p-4 min-h-[100px]">
+                  <View className="flex-row items-center justify-between mb-3">
+                    <View className={`w-10 h-10 rounded-full items-center justify-center ${getStatusColor(cert.status)}`}>
                       <Ionicons 
                         name={getStatusIcon(cert.status) as any} 
-                        size={16} 
+                        size={18} 
                         color="white" 
                       />
                     </View>
-                    <Text className={`text-xs font-medium capitalize ${
+                    <Text className={`text-sm font-semibold capitalize ${
                       cert.status === 'approved' ? 'text-green-600' :
                       cert.status === 'pending' ? 'text-orange-600' : 'text-red-600'
                     }`}>
                       {cert.status}
                     </Text>
                   </View>
-                  <Text className="font-semibold text-gray-900 mb-1">{cert.name}</Text>
-                  <Text className="text-gray-600 text-sm">{cert.type}</Text>
+                  <Text className="font-bold text-gray-900 mb-2 text-base">{cert.name}</Text>
+                  <Text className="text-gray-600 text-sm leading-5">{cert.type}</Text>
                 </View>
               </View>
             ))}
             
             {/* Add New Certificate */}
             <View className="w-[48%] mb-4">
-              <TouchableOpacity className="border-2 border-dashed border-gray-300 rounded-2xl p-3 items-center justify-center h-24">
-                <Ionicons name="add" size={24} color="#9CA3AF" />
-                <Text className="text-gray-500 text-sm mt-1 text-center">Add New</Text>
-                <Text className="text-gray-400 text-xs text-center">Apply for certification</Text>
+              <TouchableOpacity className="border-2 border-dashed border-gray-300 rounded-2xl p-4 items-center justify-center min-h-[100px] bg-gray-50">
+                <Ionicons name="add-circle" size={32} color="#10B981" />
+                <Text className="text-gray-700 text-sm mt-2 text-center font-semibold">Add New</Text>
+                <Text className="text-gray-500 text-xs text-center leading-4">Apply for certification</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -334,25 +335,25 @@ const EcoBizDashboardScreen: React.FC = () => {
       </ScrollView>
 
       {/* Bottom Navigation */}
-      <View className="bg-white border-t border-gray-200 px-4 py-2 flex-row justify-around">
-        <TouchableOpacity className="items-center py-2">
-          <Ionicons name="home" size={24} color="#10B981" />
-          <Text className="text-green-500 text-xs mt-1">Home</Text>
+      <View className="bg-white border-t border-gray-200 px-6 py-3 flex-row justify-around items-center">
+        <TouchableOpacity className="items-center py-2 flex-1">
+          <Ionicons name="home" size={26} color="#10B981" />
+          <Text className="text-green-500 text-xs mt-1 font-medium">Home</Text>
         </TouchableOpacity>
         
-        <TouchableOpacity className="items-center py-2">
-          <Ionicons name="calendar" size={24} color="#9CA3AF" />
-          <Text className="text-gray-400 text-xs mt-1">Certifications</Text>
+        <TouchableOpacity className="items-center py-2 flex-1">
+          <Ionicons name="calendar" size={26} color="#9CA3AF" />
+          <Text className="text-gray-400 text-xs mt-1 font-medium">Certifications</Text>
         </TouchableOpacity>
         
-        <TouchableOpacity className="items-center py-2">
-          <Ionicons name="document" size={24} color="#9CA3AF" />
-          <Text className="text-gray-400 text-xs mt-1">Documents</Text>
+        <TouchableOpacity className="items-center py-2 flex-1">
+          <Ionicons name="document" size={26} color="#9CA3AF" />
+          <Text className="text-gray-400 text-xs mt-1 font-medium">Documents</Text>
         </TouchableOpacity>
         
-        <TouchableOpacity className="items-center py-2">
-          <Ionicons name="settings" size={24} color="#9CA3AF" />
-          <Text className="text-gray-400 text-xs mt-1">Settings</Text>
+        <TouchableOpacity className="items-center py-2 flex-1">
+          <Ionicons name="settings" size={26} color="#9CA3AF" />
+          <Text className="text-gray-400 text-xs mt-1 font-medium">Settings</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>

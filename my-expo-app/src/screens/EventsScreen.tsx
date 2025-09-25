@@ -102,8 +102,8 @@ const EventsScreen: React.FC = () => {
       <View className="relative">
         <View className="w-full h-48 bg-gray-200 rounded-t-2xl">
           <View className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20 rounded-t-2xl" />
-          <View className="flex-1 justify-center items-center">
-            <View className="w-16 h-16 bg-blue-500 rounded-lg justify-center items-center">
+          <View className="flex-1 justify-center items-center ">
+            <View className="w-16 h-16 bg-blue-500 rounded-lg justify-center items-center  ">
               <Ionicons name="calendar" size={32} color="white" />
             </View>
           </View>
@@ -148,13 +148,15 @@ const EventsScreen: React.FC = () => {
       <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
       
       {/* Header */}
-      <View className="bg-white px-4 py-3 border-b border-gray-100">
-        <View className="flex-row items-center justify-between h-10">
-          <TouchableOpacity className="w-10 h-10 items-center justify-center">
+      <View className="bg-white px-6 py-4 border-b border-gray-100">
+        <View className="flex-row items-center justify-between">
+          <TouchableOpacity className="w-12 h-12 items-center justify-center rounded-full">
             <Ionicons name="arrow-back" size={24} color="#1F2937" />
           </TouchableOpacity>
-          <Text className="text-xl font-bold text-gray-900 flex-1 text-center">Events</Text>
-          <TouchableOpacity className="w-10 h-10 items-center justify-center">
+          <View className="flex-1 mx-4">
+            <Text className="text-xl font-bold text-gray-900 text-center">Events</Text>
+          </View>
+          <TouchableOpacity className="w-12 h-12 items-center justify-center rounded-full">
             <Ionicons name="search" size={24} color="#1F2937" />
           </TouchableOpacity>
         </View>

@@ -172,7 +172,13 @@ const BusinessRegistrationStep2: React.FC<BusinessRegistrationStep2Props> = ({
             : 'border-gray-200 bg-white'
         }`}
       >
-        <View className="flex-row items-start">
+        <View className="flex-row items-center">
+          {isSelected && (
+            <View className="w-6 h-6 bg-green-500 rounded-full items-center justify-center mr-3">
+              <Ionicons name="checkmark" size={16} color="white" />
+            </View>
+          )}
+          
           <View className={`w-12 h-12 rounded-xl items-center justify-center mr-3 ${
             isSelected ? 'bg-green-500' : 'bg-gray-100'
           }`}>
@@ -184,18 +190,11 @@ const BusinessRegistrationStep2: React.FC<BusinessRegistrationStep2Props> = ({
           </View>
           
           <View className="flex-1">
-            <View className="flex-row items-center justify-between mb-1">
-              <Text className={`font-semibold ${
-                isSelected ? 'text-green-900' : 'text-gray-900'
-              }`}>
-                {service.name}
-              </Text>
-              {isSelected && (
-                <View className="w-6 h-6 bg-green-500 rounded-full items-center justify-center">
-                  <Ionicons name="checkmark" size={16} color="white" />
-                </View>
-              )}
-            </View>
+            <Text className={`font-semibold mb-1 ${
+              isSelected ? 'text-green-900' : 'text-gray-900'
+            }`}>
+              {service.name}
+            </Text>
             <Text className={`text-sm ${
               isSelected ? 'text-green-700' : 'text-gray-600'
             }`}>
@@ -213,10 +212,10 @@ const BusinessRegistrationStep2: React.FC<BusinessRegistrationStep2Props> = ({
     return (
       <View className="mb-6">
         <View className="flex-row items-center mb-4">
-          <View className="w-8 h-8 bg-green-100 rounded-lg items-center justify-center mr-3">
+          <View className="w-10 h-10 bg-green-100 rounded-xl items-center justify-center mr-3">
             <Ionicons 
               name={categoryIcons[category] as any} 
-              size={20} 
+              size={22} 
               color="#10B981" 
             />
           </View>
@@ -237,51 +236,51 @@ const BusinessRegistrationStep2: React.FC<BusinessRegistrationStep2Props> = ({
       <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
       
       {/* Header */}
-      <View className="bg-white px-4 py-4 border-b border-gray-200">
+      <View className="bg-white px-4 py-3 border-b border-gray-200">
         <View className="flex-row items-center mb-4">
-          <TouchableOpacity onPress={onBack} className="w-10 h-10 items-center justify-center -ml-2">
+          <TouchableOpacity onPress={onBack} className="w-10 h-10 items-center justify-center">
             <Ionicons name="arrow-back" size={24} color="#1F2937" />
           </TouchableOpacity>
-          <View className="flex-1 items-center">
+          <View className="flex-1 items-center -ml-10">
             <Text className="text-xl font-bold text-gray-900">Business Registration</Text>
           </View>
           <View className="w-10" />
         </View>
         
         {/* Progress Steps */}
-        <View className="flex-row items-center justify-between mb-4">
-          <View className="flex-row items-center space-x-2">
-            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center">
+        <View className="flex-row items-center justify-between mb-4 px-1">
+          <View className="flex-row items-center">
+            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center mr-1">
               <Ionicons name="checkmark" size={16} color="white" />
             </View>
-            <Text className="text-green-600 text-sm font-medium">Basic Info</Text>
+            <Text className="text-green-600 text-xs font-medium">Basic Info</Text>
           </View>
           
-          <View className="flex-1 h-0.5 bg-green-500 mx-2" />
+          <View className="flex-1 h-0.5 bg-green-500 mx-1" />
           
-          <View className="flex-row items-center space-x-2">
-            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center">
+          <View className="flex-row items-center">
+            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center mr-1">
               <Text className="text-white font-bold text-sm">2</Text>
             </View>
-            <Text className="text-green-600 text-sm font-medium">Services</Text>
+            <Text className="text-green-600 text-xs font-medium">Services</Text>
           </View>
           
-          <View className="flex-1 h-0.5 bg-gray-300 mx-2" />
+          <View className="flex-1 h-0.5 bg-gray-300 mx-1" />
           
-          <View className="flex-row items-center space-x-2">
-            <View className="w-8 h-8 bg-gray-300 rounded-full items-center justify-center">
+          <View className="flex-row items-center">
+            <View className="w-8 h-8 bg-gray-300 rounded-full items-center justify-center mr-1">
               <Text className="text-gray-600 font-bold text-sm">3</Text>
             </View>
-            <Text className="text-gray-500 text-sm font-medium">Verification</Text>
+            <Text className="text-gray-500 text-xs font-medium">Verification</Text>
           </View>
           
-          <View className="flex-1 h-0.5 bg-gray-300 mx-2" />
+          <View className="flex-1 h-0.5 bg-gray-300 mx-1" />
           
-          <View className="flex-row items-center space-x-2">
-            <View className="w-8 h-8 bg-gray-300 rounded-full items-center justify-center">
+          <View className="flex-row items-center">
+            <View className="w-8 h-8 bg-gray-300 rounded-full items-center justify-center mr-1">
               <Text className="text-gray-600 font-bold text-sm">4</Text>
             </View>
-            <Text className="text-gray-500 text-sm font-medium">Complete</Text>
+            <Text className="text-gray-500 text-xs font-medium">Complete</Text>
           </View>
         </View>
         
@@ -316,19 +315,21 @@ const BusinessRegistrationStep2: React.FC<BusinessRegistrationStep2Props> = ({
         {/* Selected Services Counter */}
         <View className="bg-green-500 rounded-2xl p-4 mb-4 flex-row items-center justify-between">
           <View className="flex-row items-center">
-            <View className="w-8 h-8 bg-white/20 rounded-full items-center justify-center mr-3">
-              <Ionicons name="checkmark-circle" size={20} color="white" />
+            <View className="w-10 h-10 bg-white/20 rounded-full items-center justify-center mr-3">
+              <Ionicons name="checkmark-circle" size={22} color="white" />
             </View>
-            <Text className="text-white font-semibold">Selected Services</Text>
+            <Text className="text-white font-semibold text-lg">Selected Services</Text>
           </View>
-          <Text className="text-white font-bold text-lg">{selectedServices.length}</Text>
+          <View className="w-12 h-12 bg-white/20 rounded-full items-center justify-center">
+            <Text className="text-white font-bold text-xl">{selectedServices.length}</Text>
+          </View>
         </View>
 
         {/* Action Buttons */}
-        <View className="flex-row space-x-3">
+        <View className="flex-row">
           <TouchableOpacity
             onPress={onBack}
-            className="flex-1 bg-gray-200 py-4 rounded-xl"
+            className="flex-1 bg-gray-200 py-4 rounded-xl mr-3"
           >
             <Text className="text-gray-700 font-semibold text-center">Back</Text>
           </TouchableOpacity>
