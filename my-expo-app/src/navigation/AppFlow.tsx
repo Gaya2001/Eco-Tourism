@@ -8,10 +8,17 @@ import {
   SignInScreen, 
   DashboardScreen,
   WelcomeScreen,
+  HomeScreen,
+  DirectoryScreen,
+  ProfileScreen,
+  NotificationsScreen,
+  HotelDetailScreen,
+  ReviewsScreen,
+  EcoRewardsScreen,
 } from '../screens';
 import { Colors } from '../constants';
 
-type AppFlow = 'splash' | 'onboarding' | 'welcome' | 'roleSelection' | 'signUp' | 'signIn' | 'dashboard';
+type AppFlow = 'splash' | 'onboarding' | 'welcome' | 'roleSelection' | 'signUp' | 'signIn' | 'dashboard' | 'home' | 'directory' | 'profile' | 'notifications' | 'hotelDetail' | 'reviews' | 'rewards';
 
 interface User {
   id: string;
@@ -24,12 +31,13 @@ const AppFlow: React.FC = () => {
   const [currentFlow, setCurrentFlow] = useState<AppFlow>('splash');
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null);
 
   const handleOnboardingComplete = () => {
     setCurrentFlow('welcome');
   };
 
-  const handleRoleSelect = (role: string) => {
+  const handleRoleSelect = (_role: string) => {
     setCurrentFlow('signUp');
   };
 
@@ -47,7 +55,7 @@ const AppFlow: React.FC = () => {
       };
       
       setUser(newUser);
-      setCurrentFlow('dashboard');
+      setCurrentFlow('home');
     } catch (error) {
       console.error('Sign up error:', error);
     } finally {
@@ -69,7 +77,7 @@ const AppFlow: React.FC = () => {
       };
       
       setUser(existingUser);
-      setCurrentFlow('dashboard');
+      setCurrentFlow('home');
     } catch (error) {
       console.error('Sign in error:', error);
     } finally {
@@ -88,6 +96,65 @@ const AppFlow: React.FC = () => {
   const handleForgotPassword = () => {
     // For demo, just show an alert or navigate to forgot password screen
     console.log('Navigate to forgot password');
+  };
+
+  const handleNavigateToProfile = () => {
+    setCurrentFlow('profile');
+  };
+
+  const handleNavigateToNotifications = () => {
+    setCurrentFlow('notifications');
+  };
+
+  const handleNavigateToDirectory = () => {
+    setCurrentFlow('directory');
+  };
+
+  const handleNavigateBack = () => {
+    // Navigate back to previous screen based on current flow
+    switch (currentFlow) {
+      case 'onboarding':
+        setCurrentFlow('splash');
+        break;
+      case 'welcome':
+        setCurrentFlow('onboarding');
+        break;
+      case 'roleSelection':
+        setCurrentFlow('welcome');
+        break;
+      case 'signUp':
+      case 'signIn':
+        setCurrentFlow('welcome');
+        break;
+      case 'dashboard':
+        setCurrentFlow('home');
+        break;
+      case 'directory':
+        setCurrentFlow('home');
+        break;
+      case 'hotelDetail':
+        setCurrentFlow('directory');
+        break;
+      case 'reviews':
+        setCurrentFlow('hotelDetail');
+        break;
+      case 'rewards':
+        setCurrentFlow('home');
+        break;
+      case 'profile':
+        setCurrentFlow('home');
+        break;
+      case 'notifications':
+        setCurrentFlow('home');
+        break;
+      default:
+        setCurrentFlow('splash');
+    }
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    setCurrentFlow('welcome');
   };
 
   if (isLoading) {
@@ -133,6 +200,33 @@ const AppFlow: React.FC = () => {
         />
       );
     
+    case 'home':
+      return (
+        <HomeScreen 
+          user={{
+            name: user?.name || 'Sarah',
+          }}
+          onNavigateToProfile={handleNavigateToProfile}
+          onNavigateToNotifications={handleNavigateToNotifications}
+          onNavigateToDirectory={handleNavigateToDirectory}
+          onNavigateToRewards={() => setCurrentFlow('rewards')}
+        />
+      );
+
+    case 'directory':
+      return (
+        <DirectoryScreen 
+          onNavigateBack={handleNavigateBack}
+          onNavigateToHome={() => setCurrentFlow('home')}
+          onNavigateToProfile={handleNavigateToProfile}
+          onNavigateToRewards={() => setCurrentFlow('rewards')}
+          onNavigateToHotelDetail={(businessId: string) => {
+            setSelectedBusinessId(businessId);
+            setCurrentFlow('hotelDetail');
+          }}
+        />
+      );
+
     case 'dashboard':
       return (
         <DashboardScreen 
@@ -141,6 +235,53 @@ const AppFlow: React.FC = () => {
             level: 3,
             ecoPoints: 1250,
           }}
+          onNavigateToProfile={handleNavigateToProfile}
+          onNavigateToNotifications={handleNavigateToNotifications}
+          onNavigateToHome={() => setCurrentFlow('home')}
+          onLogout={handleLogout}
+        />
+      );
+    
+    case 'profile':
+      return (
+        <ProfileScreen 
+          onNavigateBack={handleNavigateBack}
+          onLogout={handleLogout}
+          onNavigateToHome={() => setCurrentFlow('home')}
+          onNavigateToDirectory={() => setCurrentFlow('directory')}
+          onNavigateToRewards={() => setCurrentFlow('rewards')}
+        />
+      );
+
+    case 'notifications':
+      return (
+        <NotificationsScreen 
+          onNavigateBack={handleNavigateBack}
+        />
+      );
+
+    case 'hotelDetail':
+      return (
+        <HotelDetailScreen 
+          onNavigateBack={handleNavigateBack}
+          onNavigateToReviews={() => setCurrentFlow('reviews')}
+        />
+      );
+
+    case 'reviews':
+      return (
+        <ReviewsScreen 
+          onNavigateBack={handleNavigateBack}
+        />
+      );
+
+    case 'rewards':
+      return (
+        <EcoRewardsScreen 
+          onNavigateBack={handleNavigateBack}
+          onNavigateToHome={() => setCurrentFlow('home')}
+          onNavigateToDirectory={() => setCurrentFlow('directory')}
+          onNavigateToProfile={handleNavigateToProfile}
         />
       );
     
