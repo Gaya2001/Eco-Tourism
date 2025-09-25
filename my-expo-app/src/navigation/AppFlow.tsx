@@ -5,7 +5,7 @@ import {
 } from '../screens';
 import { Colors } from '../constants';
 
-type AppFlow = 'splash' | 'onboarding' | 'roleSelection' | 'signUp' | 'signIn' | 'dashboard' | 'allEvents';
+type AppFlow = 'splash' | 'onboarding' | 'roleSelection' | 'signUp' | 'signIn' | 'dashboard' | 'allEvents' | 'Dwelcome';
 
 interface User {
   id: string;
@@ -18,6 +18,10 @@ const AppFlow: React.FC = () => {
   const [currentFlow, setCurrentFlow] = useState<AppFlow>('splash');
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleDwelcome = () => {
+    setCurrentFlow('Dwelcome')
+  }
 
   const handleAllEvents = () => {
     setCurrentFlow('allEvents');

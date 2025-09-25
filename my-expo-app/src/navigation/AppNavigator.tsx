@@ -5,10 +5,14 @@ import { Ionicons } from '@expo/vector-icons';
 import { Colors } from '../constants';
 
 // Import screens with explicit file extensions
-import HomeScreen from '../screens/HomeScreen';
-import DestinationsScreen from '../screens/DestinationsScreen';
-import ToursScreen from '../screens/ToursScreen';
-import ProfileScreen from '../screens/ProfileScreen';
+import {
+  DashboardWelcome,
+  EcoAnalytics,
+  BusinessRegistration1,
+  ProfileManagement,
+  AdminDashboard,
+  CampaignsScreen,
+} from '../screens';
 
 const Tab = createBottomTabNavigator();
 
@@ -19,19 +23,21 @@ const TabNavigator = () => {
       screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: keyof typeof Ionicons.glyphMap;
-
-          if (route.name === 'Home') {
+          if (route.name === 'Dashboard') {
             iconName = focused ? 'home' : 'home-outline';
-          } else if (route.name === 'Destinations') {
-            iconName = focused ? 'location' : 'location-outline';
-          } else if (route.name === 'Tours') {
-            iconName = focused ? 'map' : 'map-outline';
+          } else if (route.name === 'EcoBiz') {
+            iconName = focused ? 'leaf' : 'leaf-outline';
+          } else if (route.name === 'BusinessReg') {
+            iconName = focused ? 'briefcase' : 'briefcase-outline';
           } else if (route.name === 'Profile') {
             iconName = focused ? 'person' : 'person-outline';
+          } else if (route.name === 'Admin') {
+            iconName = focused ? 'settings' : 'settings-outline';
+          } else if (route.name === 'Campaigns') {
+            iconName = focused ? 'megaphone' : 'megaphone-outline';
           } else {
             iconName = 'help-outline';
           }
-
           return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: Colors.primary[500],
@@ -51,12 +57,17 @@ const TabNavigator = () => {
         headerTitleStyle: {
           fontWeight: 'bold',
         },
-      })}
-    >
-      <Tab.Screen name="Home" component={HomeScreen} options={{ title: 'EcoTourism' }} />
-      <Tab.Screen name="Destinations" component={DestinationsScreen} />
-      <Tab.Screen name="Tours" component={ToursScreen} />
-      <Tab.Screen name="Profile" component={ProfileScreen} />
+      })}>
+      <Tab.Screen name="Dashboard" component={DashboardWelcome} options={{ title: 'Dashboard' }} />
+      <Tab.Screen name="EcoBiz" component={EcoAnalytics} options={{ title: 'EcoBiz' }} />
+      <Tab.Screen
+        name="BusinessReg"
+        component={BusinessRegistration1}
+        options={{ title: 'Business Registration' }}
+      />
+      <Tab.Screen name="Profile" component={ProfileManagement} options={{ title: 'Profile' }} />
+      <Tab.Screen name="Admin" component={AdminDashboard} options={{ title: 'Admin Dashboard' }} />
+      <Tab.Screen name="Campaigns" component={CampaignsScreen} />
     </Tab.Navigator>
   );
 };

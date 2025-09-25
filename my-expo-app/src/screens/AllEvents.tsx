@@ -47,7 +47,7 @@ const events: Event[] = [
     location: 'Convention Center',
     price: 'Free',
     // Note: You'll need to add these images to your assets folder
-    image: require('../../assets/AllEvent1.png'), 
+    image: require('../../assets/AllEvent1.png'),
   },
   {
     id: '2',
@@ -149,7 +149,10 @@ const AllEventsScreen: React.FC = () => {
 
       {/* Filters */}
       <View style={styles.filterWrapper}>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filtersContainer}>
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.filtersContainer}>
           {filters.map((filter) => (
             <FilterChip
               key={filter}
@@ -167,15 +170,24 @@ const AllEventsScreen: React.FC = () => {
         keyExtractor={(item) => item.id}
         renderItem={(props) => <EventCard {...props} />}
         contentContainerStyle={styles.eventsList}
-        showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={true}
+        style={{ flex: 1, width: '100%' }}
       />
 
       {/* Bottom Navigation */}
       <View style={styles.bottomNavigation}>
-        <Ionicons name="home-outline" size={28} color="#888" />
-        <Ionicons name="calendar" size={28} color="#2ecc71" />
-        <Ionicons name="heart-outline" size={28} color="#888" />
-        <Ionicons name="person-outline" size={28} color="#888" />
+        <View style={styles.navIconContainer}>
+          <Ionicons name="home-outline" size={28} color="#888" />
+        </View>
+        <View style={styles.navIconContainer}>
+          <Ionicons name="calendar" size={28} color="#2ecc71" />
+        </View>
+        <View style={styles.navIconContainer}>
+          <Ionicons name="heart-outline" size={28} color="#888" />
+        </View>
+        <View style={styles.navIconContainer}>
+          <Ionicons name="person-outline" size={28} color="#888" />
+        </View>
       </View>
     </View>
   );
@@ -186,6 +198,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#f8f8f8',
+    height: '100%',
+    width: '100%',
   },
   header: {
     flexDirection: 'row',
@@ -221,7 +235,7 @@ const styles = StyleSheet.create({
   eventsList: {
     paddingHorizontal: 16,
     paddingTop: 10,
-    paddingBottom: 80,
+    paddingBottom: 130, // Increased to ensure content isn't cut off by extended bottom navigation
   },
   eventCard: {
     backgroundColor: '#fff',
@@ -300,14 +314,32 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     right: 0,
-    bottom: 0,
+    bottom: 0, // Extend to bottom of screen
     flexDirection: 'row',
     backgroundColor: '#fff',
     borderTopWidth: 1,
     borderTopColor: '#eee',
-    height: 60,
+    paddingTop: 15, // Add padding to keep icons in the same position
+    paddingBottom: 40, // Add padding to extend below for system navigation
+    height: 'auto', // Auto height to accommodate padding
     alignItems: 'center',
     justifyContent: 'space-around',
+    zIndex: 10, // Ensure it's above other content
+    borderTopLeftRadius: 20, // Rounded corners only on top
+    borderTopRightRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5, // Add elevation for Android shadow
+  },
+  navIconContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 5,
   },
 });
 
