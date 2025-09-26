@@ -33,7 +33,7 @@ const mockEvents: Event[] = [
     time: '2:00 PM',
     location: 'Convention Center',
     price: 0,
-    image: 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=400&h=200&fit=crop',
+    image: 'https://picsum.photos/seed/tech/400/200',
     category: 'All Events',
     isFree: true,
   },
@@ -45,7 +45,7 @@ const mockEvents: Event[] = [
     time: '6:00 PM',
     location: 'Central Park',
     price: 25,
-    image: 'https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=200&fit=crop',
+    image: 'https://picsum.photos/seed/music/400/200',
     category: 'Music',
   },
   {
@@ -56,7 +56,7 @@ const mockEvents: Event[] = [
     time: '7:00 PM',
     location: 'Downtown Hotel',
     price: 15,
-    image: 'https://images.unsplash.com/photo-1515169067868-5387ec356754?w=400&h=200&fit=crop',
+    image: 'https://picsum.photos/seed/business/400/200',
     category: 'All Events',
   },
   {
@@ -67,7 +67,7 @@ const mockEvents: Event[] = [
     time: '8:00 AM',
     location: 'Wellness Studio',
     price: 20,
-    image: 'https://images.unsplash.com/photo-1506126613408-eca07ce68e71?w=400&h=200&fit=crop',
+    image: 'https://picsum.photos/seed/yoga/400/200',
     category: 'All Events',
   },
   {
@@ -78,7 +78,7 @@ const mockEvents: Event[] = [
     time: '11:00 AM',
     location: 'Market Square',
     price: 0,
-    image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=200&fit=crop',
+    image: 'https://picsum.photos/seed/food/400/200',
     category: 'All Events',
     isFree: true,
   },
@@ -87,66 +87,81 @@ const mockEvents: Event[] = [
 const EventsScreen: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All Events');
   const [searchQuery, setSearchQuery] = useState('');
+  const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
   const categories = ['All Events', 'This Week', 'Music', 'Sports'];
 
   const filteredEvents = mockEvents.filter(event => {
     const matchesCategory = selectedCategory === 'All Events' || event.category === selectedCategory;
     const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         event.description.toLowerCase().includes(searchQuery.toLowerCase());
+      event.description.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
-  const EventCard = ({ event }: { event: Event }) => (
-    <View className="bg-white rounded-2xl mb-4 shadow-sm border border-gray-100">
-      <View className="relative">
-        <View className="w-full h-48 bg-gray-200 rounded-t-2xl">
-          <View className="absolute inset-0 bg-gradient-to-b from-transparent to-black/20 rounded-t-2xl" />
-          <View className="flex-1 justify-center items-center ">
-            <View className="w-16 h-16 bg-blue-500 rounded-lg justify-center items-center  ">
-              <Ionicons name="calendar" size={32} color="white" />
+  const EventCard = ({ event }: { event: Event }) => {
+    const handleImageError = () => {
+      setImageErrors(prev => ({ ...prev, [event.id]: true }));
+    };
+
+    return (
+      <View className="bg-white rounded-2xl mb-4 shadow-sm border border-gray-100">
+        <View className="relative">
+          {imageErrors[event.id] ? (
+            <View className="w-full h-48 bg-gradient-to-br from-blue-400 to-purple-500 rounded-t-2xl justify-center items-center">
+              <View className="w-16 h-16 bg-white/20 rounded-2xl justify-center items-center mb-2">
+                <Ionicons name="calendar" size={32} color="white" />
+              </View>
+              <Text className="text-white font-semibold text-lg">{event.title.split(' ')[0]}</Text>
+            </View>
+          ) : (
+            <Image
+              source={{ uri: event.image }}
+              className="w-full h-48 rounded-t-2xl"
+              style={{ backgroundColor: '#f3f4f6' }}
+              onError={handleImageError}
+            />
+          )}
+          <View className="absolute inset-0 bg-black/10 rounded-t-2xl" />
+          <View className="absolute top-3 right-3">
+            <View className={`px-3 py-1 rounded-full ${event.isFree ? 'bg-green-500' : 'bg-gray-900/80'}`}>
+              <Text className="text-white text-sm font-medium">
+                {event.isFree ? 'FREE' : `$${event.price}`}
+              </Text>
             </View>
           </View>
         </View>
-        <View className="absolute top-3 right-3">
-          <View className={`px-3 py-1 rounded-full ${event.isFree ? 'bg-green-500' : 'bg-gray-800'}`}>
-            <Text className="text-white text-sm font-medium">
-              {event.isFree ? 'FREE' : `$${event.price}`}
-            </Text>
-          </View>
-        </View>
-      </View>
 
-      <View className="p-4">
-        <Text className="text-lg font-bold text-gray-900 mb-2">{event.title}</Text>
-        <Text className="text-gray-600 text-sm mb-3 leading-5">{event.description}</Text>
-        
-        <View className="flex-row items-center mb-2">
-          <Ionicons name="calendar-outline" size={16} color="#6B7280" />
-          <Text className="text-gray-600 text-sm ml-2">{event.date}</Text>
-          <View className="flex-row items-center ml-4">
-            <Ionicons name="time-outline" size={16} color="#6B7280" />
-            <Text className="text-gray-600 text-sm ml-2">{event.time}</Text>
+        <View className="p-4">
+          <Text className="text-lg font-bold text-gray-900 mb-2">{event.title}</Text>
+          <Text className="text-gray-600 text-sm mb-3 leading-5">{event.description}</Text>
+
+          <View className="flex-row items-center mb-2">
+            <Ionicons name="calendar-outline" size={16} color="#6B7280" />
+            <Text className="text-gray-600 text-sm ml-2">{event.date}</Text>
+            <View className="flex-row items-center ml-4">
+              <Ionicons name="time-outline" size={16} color="#6B7280" />
+              <Text className="text-gray-600 text-sm ml-2">{event.time}</Text>
+            </View>
           </View>
-        </View>
-        
-        <View className="flex-row items-center justify-between">
-          <View className="flex-row items-center">
-            <Ionicons name="location-outline" size={16} color="#6B7280" />
-            <Text className="text-gray-600 text-sm ml-1">{event.location}</Text>
+
+          <View className="flex-row items-center justify-between">
+            <View className="flex-row items-center">
+              <Ionicons name="location-outline" size={16} color="#6B7280" />
+              <Text className="text-gray-600 text-sm ml-1">{event.location}</Text>
+            </View>
+            <TouchableOpacity className="bg-green-500 px-6 py-2 rounded-full">
+              <Text className="text-white font-medium text-sm">Join</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity className="bg-green-500 px-6 py-2 rounded-full">
-            <Text className="text-white font-medium text-sm">Join</Text>
-          </TouchableOpacity>
         </View>
       </View>
-    </View>
-  );
+    );
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
-      
+
       {/* Header */}
       <View className="bg-white px-6 py-4 border-b border-gray-100">
         <View className="flex-row items-center justify-between">
@@ -171,18 +186,16 @@ const EventsScreen: React.FC = () => {
                 <TouchableOpacity
                   key={category}
                   onPress={() => setSelectedCategory(category)}
-                  className={`px-6 py-2 rounded-full ${
-                    selectedCategory === category
+                  className={`px-6 py-2 rounded-full ${selectedCategory === category
                       ? 'bg-green-500'
                       : 'bg-gray-200'
-                  }`}
+                    }`}
                 >
                   <Text
-                    className={`font-medium ${
-                      selectedCategory === category
+                    className={`font-medium ${selectedCategory === category
                         ? 'text-white'
                         : 'text-gray-600'
-                    }`}
+                      }`}
                   >
                     {category}
                   </Text>
@@ -211,7 +224,7 @@ const EventsScreen: React.FC = () => {
           {filteredEvents.map((event) => (
             <EventCard key={event.id} event={event} />
           ))}
-          
+
           {filteredEvents.length === 0 && (
             <View className="flex-1 justify-center items-center py-12">
               <Ionicons name="calendar-outline" size={64} color="#D1D5DB" />
@@ -231,17 +244,17 @@ const EventsScreen: React.FC = () => {
             <Ionicons name="home" size={24} color="#9CA3AF" />
             <Text className="text-gray-400 text-xs mt-1">Home</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity className="items-center py-2">
             <Ionicons name="calendar" size={24} color="#10B981" />
             <Text className="text-green-500 text-xs mt-1">Events</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity className="items-center py-2">
             <Ionicons name="heart" size={24} color="#9CA3AF" />
             <Text className="text-gray-400 text-xs mt-1">Favorites</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity className="items-center py-2">
             <Ionicons name="person" size={24} color="#9CA3AF" />
             <Text className="text-gray-400 text-xs mt-1">Profile</Text>

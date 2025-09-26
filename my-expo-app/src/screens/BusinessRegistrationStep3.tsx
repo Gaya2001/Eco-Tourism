@@ -93,17 +93,17 @@ const BusinessRegistrationStep3: React.FC<BusinessRegistrationStep3Props> = ({
     // Simulate file upload
     Alert.alert('File Upload', 'File selection would open here in a real app', [
       { text: 'Cancel', style: 'cancel' },
-      { 
-        text: 'Select File', 
+      {
+        text: 'Select File',
         onPress: () => {
-          setDocuments(prev => prev.map(doc => 
-            doc.id === documentId 
-              ? { 
-                  ...doc, 
-                  isUploaded: true, 
-                  fileName: `${doc.name.toLowerCase().replace(/\s+/g, '-')}.pdf`,
-                  fileSize: '2.5 MB'
-                }
+          setDocuments(prev => prev.map(doc =>
+            doc.id === documentId
+              ? {
+                ...doc,
+                isUploaded: true,
+                fileName: `${doc.name.toLowerCase().replace(/\s+/g, '-')}.pdf`,
+                fileSize: '2.5 MB'
+              }
               : doc
           ));
         }
@@ -114,12 +114,12 @@ const BusinessRegistrationStep3: React.FC<BusinessRegistrationStep3Props> = ({
   const handleDeleteFile = (documentId: string) => {
     Alert.alert('Delete File', 'Are you sure you want to delete this file?', [
       { text: 'Cancel', style: 'cancel' },
-      { 
-        text: 'Delete', 
+      {
+        text: 'Delete',
         style: 'destructive',
         onPress: () => {
-          setDocuments(prev => prev.map(doc => 
-            doc.id === documentId 
+          setDocuments(prev => prev.map(doc =>
+            doc.id === documentId
               ? { ...doc, isUploaded: false, fileName: undefined, fileSize: undefined }
               : doc
           ));
@@ -161,14 +161,14 @@ const BusinessRegistrationStep3: React.FC<BusinessRegistrationStep3Props> = ({
 
   const DocumentCard = ({ document }: { document: Document }) => {
     const colorClasses = getDocumentColor(document.color);
-    
+
     return (
       <View className={`border ${colorClasses.border} rounded-2xl p-4 mb-4 bg-white shadow-sm`}>
         <View className="flex-row items-start mb-3">
           <View className={`w-12 h-12 ${colorClasses.bg} rounded-xl items-center justify-center mr-3 mt-1`}>
-            <Ionicons 
-              name={document.icon as any} 
-              size={20} 
+            <Ionicons
+              name={document.icon as any}
+              size={20}
               color={colorClasses.iconColor}
             />
           </View>
@@ -203,7 +203,7 @@ const BusinessRegistrationStep3: React.FC<BusinessRegistrationStep3Props> = ({
                 <TouchableOpacity className="w-8 h-8 bg-green-500 rounded-full items-center justify-center mr-2">
                   <Ionicons name="checkmark" size={14} color="white" />
                 </TouchableOpacity>
-                <TouchableOpacity 
+                <TouchableOpacity
                   onPress={() => handleDeleteFile(document.id)}
                   className="w-8 h-8 bg-red-100 rounded-full items-center justify-center"
                 >
@@ -238,63 +238,61 @@ const BusinessRegistrationStep3: React.FC<BusinessRegistrationStep3Props> = ({
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
-      
+
       {/* Header */}
-      <View className="bg-white px-4 py-3 border-b border-gray-100">
-        <View className="flex-row items-center mb-3">
-          <TouchableOpacity onPress={onBack} className="p-2 -ml-2">
-            <Ionicons name="arrow-back" size={22} color="#374151" />
+      <View className="bg-white px-4 py-4 border-b border-gray-200">
+        <View className="flex-row items-center mb-4">
+          <TouchableOpacity onPress={onBack} className="w-10 h-10 items-center justify-center -ml-2">
+            <Ionicons name="arrow-back" size={24} color="#1F2937" />
           </TouchableOpacity>
-          <View className="flex-1 items-center -ml-8">
-            <Text className="text-lg font-semibold text-gray-900">Business Registration</Text>
+          <View className="flex-1 items-center">
+            <Text className="text-xl font-bold text-gray-900">Business Registration</Text>
           </View>
-          <TouchableOpacity className="p-2 -mr-2">
-            <Ionicons name="ellipsis-vertical" size={20} color="#6B7280" />
-          </TouchableOpacity>
+          <View className="w-10" />
         </View>
-        
+
         {/* Progress Steps */}
         <View className="flex-row items-center justify-between mb-4">
-          <View className="flex-row items-center">
-            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center mr-2">
-              <Ionicons name="checkmark" size={14} color="white" />
+          <View className="flex-col items-center">
+            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center mb-1">
+              <Ionicons name="checkmark" size={16} color="white" />
             </View>
-            <Text className="text-green-600 text-xs font-semibold">Info</Text>
+            <Text className="text-green-600 text-xs font-medium">Basic Info</Text>
           </View>
-          
-          <View className="flex-1 h-0.5 bg-green-500 mx-2" />
-          
-          <View className="flex-row items-center">
-            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center mr-2">
-              <Ionicons name="checkmark" size={14} color="white" />
+
+          <View className="flex-1 h-0.5 bg-green-500 mx-2 mt-[-12px]" />
+
+          <View className="flex-col items-center">
+            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center mb-1">
+              <Ionicons name="checkmark" size={16} color="white" />
             </View>
-            <Text className="text-green-600 text-xs font-semibold">Details</Text>
+            <Text className="text-green-600 text-xs font-medium">Business Details</Text>
           </View>
-          
-          <View className="flex-1 h-0.5 bg-green-500 mx-2" />
-          
-          <View className="flex-row items-center">
-            <View className="w-8 h-8 bg-blue-500 rounded-full items-center justify-center mr-2">
-              <Text className="text-white font-bold text-xs">3</Text>
+
+          <View className="flex-1 h-0.5 bg-green-500 mx-2 mt-[-12px]" />
+
+          <View className="flex-col items-center">
+            <View className="w-8 h-8 bg-blue-500 rounded-full items-center justify-center mb-1">
+              <Text className="text-white font-bold text-sm">3</Text>
             </View>
-            <Text className="text-blue-600 text-xs font-semibold">Documents</Text>
+            <Text className="text-blue-600 text-xs font-medium">Documents</Text>
           </View>
-          
-          <View className="flex-1 h-0.5 bg-gray-300 mx-2" />
-          
-          <View className="flex-row items-center">
-            <View className="w-8 h-8 bg-gray-300 rounded-full items-center justify-center mr-2">
-              <Text className="text-gray-600 font-bold text-xs">4</Text>
+
+          <View className="flex-1 h-0.5 bg-gray-300 mx-2 mt-[-12px]" />
+
+          <View className="flex-col items-center">
+            <View className="w-8 h-8 bg-gray-300 rounded-full items-center justify-center mb-1">
+              <Text className="text-gray-600 font-bold text-sm">4</Text>
             </View>
-            <Text className="text-gray-500 text-xs font-semibold">Review</Text>
+            <Text className="text-gray-500 text-xs font-medium">Review</Text>
           </View>
         </View>
-        
+
         {/* Progress Bar */}
         <View className="mb-2">
           <View className="flex-row items-center justify-between mb-2">
             <Text className="text-blue-600 text-sm font-medium">Step 3 of 4</Text>
-            <Text className="text-gray-500 text-sm">75% Complete</Text>
+            <Text className="text-blue-600 text-sm font-medium">Upload Documents</Text>
           </View>
           <View className="w-full h-2 bg-gray-200 rounded-full">
             <View className="w-3/4 h-2 bg-blue-500 rounded-full" />
@@ -388,8 +386,8 @@ const BusinessRegistrationStep3: React.FC<BusinessRegistrationStep3Props> = ({
               {documents.filter(doc => doc.isUploaded).length} of {documents.length} documents uploaded • Complete
             </Text>
             <View className="w-full h-2 bg-gray-200 rounded-full">
-              <View 
-                className="h-2 bg-green-500 rounded-full" 
+              <View
+                className="h-2 bg-green-500 rounded-full"
                 style={{ width: `${uploadProgress}%` }}
               />
             </View>
@@ -406,24 +404,22 @@ const BusinessRegistrationStep3: React.FC<BusinessRegistrationStep3Props> = ({
           >
             <Text className="text-gray-700 font-semibold text-center text-base">Save Draft</Text>
           </TouchableOpacity>
-          
+
           <TouchableOpacity
             onPress={handleNext}
-            className={`flex-1 py-3.5 rounded-xl ${
-              canProceed ? 'bg-blue-500' : 'bg-gray-300'
-            }`}
+            className={`flex-1 py-3.5 rounded-xl ${canProceed ? 'bg-blue-500' : 'bg-gray-300'
+              }`}
             disabled={!canProceed}
           >
             <View className="flex-row items-center justify-center">
-              <Text className={`font-semibold mr-2 text-base ${
-                canProceed ? 'text-white' : 'text-gray-500'
-              }`}>
+              <Text className={`font-semibold mr-2 text-base ${canProceed ? 'text-white' : 'text-gray-500'
+                }`}>
                 Continue
               </Text>
-              <Ionicons 
-                name="arrow-forward" 
-                size={16} 
-                color={canProceed ? 'white' : '#6B7280'} 
+              <Ionicons
+                name="arrow-forward"
+                size={16}
+                color={canProceed ? 'white' : '#6B7280'}
               />
             </View>
           </TouchableOpacity>

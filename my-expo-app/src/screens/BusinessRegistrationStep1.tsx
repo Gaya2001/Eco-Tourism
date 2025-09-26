@@ -68,7 +68,7 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
   const validateForm = () => {
     const requiredFields = ['businessName', 'businessType', 'businessEmail', 'phoneNumber'];
     const missingFields = requiredFields.filter(field => !formData[field as keyof BusinessInfo]);
-    
+
     if (missingFields.length > 0) {
       Alert.alert('Missing Information', 'Please fill in all required fields marked with *');
       return false;
@@ -95,13 +95,13 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
     Alert.alert('Draft Saved', 'Your progress has been saved');
   };
 
-  const CustomDropdown = ({ 
-    value, 
-    placeholder, 
-    options, 
-    onSelect, 
-    isOpen, 
-    onToggle 
+  const CustomDropdown = ({
+    value,
+    placeholder,
+    options,
+    onSelect,
+    isOpen,
+    onToggle
   }: {
     value: string;
     placeholder: string;
@@ -118,13 +118,13 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
         <Text className={`text-base ${value ? 'text-gray-900' : 'text-gray-500'}`}>
           {value || placeholder}
         </Text>
-        <Ionicons 
-          name={isOpen ? 'chevron-up' : 'chevron-down'} 
-          size={18} 
-          color="#6B7280" 
+        <Ionicons
+          name={isOpen ? 'chevron-up' : 'chevron-down'}
+          size={18}
+          color="#6B7280"
         />
       </TouchableOpacity>
-      
+
       {isOpen && (
         <View className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-xl mt-1 shadow-lg z-10 max-h-48">
           <ScrollView>
@@ -149,33 +149,66 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
-      
+
       {/* Header */}
-      <View className="bg-white px-4 py-7 border-b border-gray-100">
-        <View className="flex-row items-center mb-1">
-          <TouchableOpacity className="p-2 -ml-2">
-            <Ionicons name="arrow-back" size={22} color="#374151" />
+      <View className="bg-white px-4 py-4 border-b border-gray-200">
+        <View className="flex-row items-center mb-4">
+          <TouchableOpacity className="w-10 h-10 items-center justify-center -ml-2">
+            <Ionicons name="arrow-back" size={24} color="#1F2937" />
           </TouchableOpacity>
-          <View className="flex-1 items-center -ml-8">
-            <Text className="text-lg font-semibold text-gray-900">Business Registration</Text>
+          <View className="flex-1 items-center">
+            <Text className="text-xl font-bold text-gray-900">Business Registration</Text>
           </View>
-          <View className="w-8" />
+          <View className="w-10" />
         </View>
-        
+
+        {/* Progress Steps */}
+        <View className="flex-row items-center justify-between mb-4">
+          <View className="flex-col items-center">
+            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center mb-1">
+              <Text className="text-white font-bold text-sm">1</Text>
+            </View>
+            <Text className="text-green-600 text-xs font-medium">Basic Info</Text>
+          </View>
+
+          <View className="flex-1 h-0.5 bg-gray-300 mx-2 mt-[-12px]" />
+
+          <View className="flex-col items-center">
+            <View className="w-8 h-8 bg-gray-300 rounded-full items-center justify-center mb-1">
+              <Text className="text-gray-600 font-bold text-sm">2</Text>
+            </View>
+            <Text className="text-gray-500 text-xs font-medium">Business Details</Text>
+          </View>
+
+          <View className="flex-1 h-0.5 bg-gray-300 mx-2 mt-[-12px]" />
+
+          <View className="flex-col items-center">
+            <View className="w-8 h-8 bg-gray-300 rounded-full items-center justify-center mb-1">
+              <Text className="text-gray-600 font-bold text-sm">3</Text>
+            </View>
+            <Text className="text-gray-500 text-xs font-medium">Documents</Text>
+          </View>
+
+          <View className="flex-1 h-0.5 bg-gray-300 mx-2 mt-[-12px]" />
+
+          <View className="flex-col items-center">
+            <View className="w-8 h-8 bg-gray-300 rounded-full items-center justify-center mb-1">
+              <Text className="text-gray-600 font-bold text-sm">4</Text>
+            </View>
+            <Text className="text-gray-500 text-xs font-medium">Review</Text>
+          </View>
+        </View>
+
         {/* Progress Bar */}
-        <View className="mb-3">
-          <View className="flex-row items-center justify-between mb-3">
-            <Text className="text-green-600 text-sm font-semibold">Step 1 of 3</Text>
-            <Text className="text-gray-500 text-sm font-medium">33%</Text>
+        <View className="mb-2">
+          <View className="flex-row items-center justify-between mb-2">
+            <Text className="text-green-600 text-sm font-medium">Step 1 of 4</Text>
+            <Text className="text-green-600 text-sm font-medium">Basic Information</Text>
           </View>
-          <View className="w-full h-2.5 bg-gray-200 rounded-full">
-            <View className="w-1/3 h-2.5 bg-green-500 rounded-full" />
+          <View className="w-full h-2 bg-gray-200 rounded-full">
+            <View className="w-1/4 h-2 bg-green-500 rounded-full" />
           </View>
         </View>
-        
-        <Text className="text-gray-600 text-sm mt-3 leading-5">
-          Let's start with the basics about your business
-        </Text>
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
@@ -189,7 +222,7 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
               <TextInput
                 placeholder="Enter your business name"
                 value={formData.businessName}
-                onChangeText={(text) => setFormData({...formData, businessName: text})}
+                onChangeText={(text) => setFormData({ ...formData, businessName: text })}
                 className="flex-1 text-gray-900 text-base"
                 placeholderTextColor="#9CA3AF"
               />
@@ -206,7 +239,7 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
               value={formData.businessType}
               placeholder="Select business type"
               options={businessTypes}
-              onSelect={(value) => setFormData({...formData, businessType: value})}
+              onSelect={(value) => setFormData({ ...formData, businessType: value })}
               isOpen={showBusinessTypeDropdown}
               onToggle={() => {
                 setShowBusinessTypeDropdown(!showBusinessTypeDropdown);
@@ -222,7 +255,7 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
               value={formData.industry}
               placeholder="Select industry"
               options={industries}
-              onSelect={(value) => setFormData({...formData, industry: value})}
+              onSelect={(value) => setFormData({ ...formData, industry: value })}
               isOpen={showIndustryDropdown}
               onToggle={() => {
                 setShowIndustryDropdown(!showIndustryDropdown);
@@ -243,7 +276,7 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
               <TextInput
                 placeholder="business@company.com"
                 value={formData.businessEmail}
-                onChangeText={(text) => setFormData({...formData, businessEmail: text})}
+                onChangeText={(text) => setFormData({ ...formData, businessEmail: text })}
                 className="flex-1 text-gray-900 text-base"
                 placeholderTextColor="#9CA3AF"
                 keyboardType="email-address"
@@ -262,7 +295,7 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
               <TextInput
                 placeholder="+1 (555) 123-4567"
                 value={formData.phoneNumber}
-                onChangeText={(text) => setFormData({...formData, phoneNumber: text})}
+                onChangeText={(text) => setFormData({ ...formData, phoneNumber: text })}
                 className="flex-1 text-gray-900 text-base"
                 placeholderTextColor="#9CA3AF"
                 keyboardType="phone-pad"
@@ -278,7 +311,7 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
               <TextInput
                 placeholder="www.yourcompany.com"
                 value={formData.website}
-                onChangeText={(text) => setFormData({...formData, website: text})}
+                onChangeText={(text) => setFormData({ ...formData, website: text })}
                 className="flex-1 text-gray-900 text-base"
                 placeholderTextColor="#9CA3AF"
                 keyboardType="url"
@@ -298,7 +331,7 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
               <TextInput
                 placeholder="Tell us about your business..."
                 value={formData.businessDescription}
-                onChangeText={(text) => setFormData({...formData, businessDescription: text})}
+                onChangeText={(text) => setFormData({ ...formData, businessDescription: text })}
                 className="text-gray-900 min-h-20 text-base"
                 placeholderTextColor="#9CA3AF"
                 multiline
@@ -318,7 +351,7 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
             >
               <Text className="text-gray-700 font-semibold text-center text-base">Save Draft</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               onPress={handleNext}
               className="flex-1 bg-green-500 py-3.5 rounded-xl"

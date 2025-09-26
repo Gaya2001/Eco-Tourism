@@ -66,8 +66,8 @@ const BusinessRegistrationStep4: React.FC<BusinessRegistrationStep4Props> = ({
       `Your application will be submitted for approval. The application fee of $${applicationFee.toFixed(2)} will be charged to your payment method.`,
       [
         { text: 'Cancel', style: 'cancel' },
-        { 
-          text: 'Submit for Approval', 
+        {
+          text: 'Submit for Approval',
           style: 'default',
           onPress: onSubmit
         }
@@ -75,33 +75,32 @@ const BusinessRegistrationStep4: React.FC<BusinessRegistrationStep4Props> = ({
     );
   };
 
-  const InfoSection = ({ 
-    title, 
-    data, 
-    onEdit: onEditSection 
-  }: { 
-    title: string; 
-    data: Record<string, string>; 
+  const InfoSection = ({
+    title,
+    data,
+    onEdit: onEditSection
+  }: {
+    title: string;
+    data: Record<string, string>;
     onEdit: () => void;
   }) => (
-    <View className="bg-white rounded-2xl p-4 mb-4 shadow-sm">
-      <View className="flex-row items-center justify-between mb-4">
+    <View className="bg-white rounded-2xl p-6 mb-4 shadow-sm">
+      <View className="flex-row items-center justify-between mb-6">
         <Text className="text-lg font-bold text-gray-900">{title}</Text>
-        <TouchableOpacity 
+        <TouchableOpacity
           onPress={onEditSection}
-          className="flex-row items-center bg-gray-100 px-3 py-1.5 rounded-lg"
+          className="px-0"
         >
-          <Text className="text-gray-700 text-sm font-medium mr-1">Edit</Text>
-          <Ionicons name="pencil" size={14} color="#374151" />
+          <Text className="text-blue-600 text-sm font-medium">Edit</Text>
         </TouchableOpacity>
       </View>
-      
+
       {Object.entries(data).map(([key, value]) => (
-        <View key={key} className="flex-row justify-between items-start mb-3 last:mb-0">
-          <Text className="text-gray-600 text-sm flex-1 capitalize">
+        <View key={key} className="mb-4 last:mb-0">
+          <Text className="text-gray-500 text-sm mb-1 capitalize">
             {key.replace(/([A-Z])/g, ' $1').trim()}
           </Text>
-          <Text className="text-gray-900 font-medium text-sm flex-2 text-right">
+          <Text className="text-gray-900 font-medium text-base">
             {value}
           </Text>
         </View>
@@ -112,7 +111,7 @@ const BusinessRegistrationStep4: React.FC<BusinessRegistrationStep4Props> = ({
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="#F9FAFB" />
-      
+
       {/* Header */}
       <View className="bg-white px-4 py-4 border-b border-gray-200">
         <View className="flex-row items-center mb-4">
@@ -124,44 +123,44 @@ const BusinessRegistrationStep4: React.FC<BusinessRegistrationStep4Props> = ({
           </View>
           <View className="w-10" />
         </View>
-        
+
         {/* Progress Steps */}
         <View className="flex-row items-center justify-between mb-4">
-          <View className="flex-row items-center space-x-2">
-            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center">
+          <View className="flex-col items-center">
+            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center mb-1">
               <Ionicons name="checkmark" size={16} color="white" />
             </View>
-            <Text className="text-green-600 text-sm font-medium">Info</Text>
+            <Text className="text-green-600 text-xs font-medium">Basic Info</Text>
           </View>
-          
-          <View className="flex-1 h-0.5 bg-green-500 mx-2" />
-          
-          <View className="flex-row items-center space-x-2">
-            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center">
+
+          <View className="flex-1 h-0.5 bg-green-500 mx-2 mt-[-12px]" />
+
+          <View className="flex-col items-center">
+            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center mb-1">
               <Ionicons name="checkmark" size={16} color="white" />
             </View>
-            <Text className="text-green-600 text-sm font-medium">Business Details</Text>
+            <Text className="text-green-600 text-xs font-medium">Business Details</Text>
           </View>
-          
-          <View className="flex-1 h-0.5 bg-green-500 mx-2" />
-          
-          <View className="flex-row items-center space-x-2">
-            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center">
+
+          <View className="flex-1 h-0.5 bg-green-500 mx-2 mt-[-12px]" />
+
+          <View className="flex-col items-center">
+            <View className="w-8 h-8 bg-green-500 rounded-full items-center justify-center mb-1">
               <Ionicons name="checkmark" size={16} color="white" />
             </View>
-            <Text className="text-green-600 text-sm font-medium">Documents</Text>
+            <Text className="text-green-600 text-xs font-medium">Documents</Text>
           </View>
-          
-          <View className="flex-1 h-0.5 bg-blue-500 mx-2" />
-          
-          <View className="flex-row items-center space-x-2">
-            <View className="w-8 h-8 bg-blue-500 rounded-full items-center justify-center">
+
+          <View className="flex-1 h-0.5 bg-green-500 mx-2 mt-[-12px]" />
+
+          <View className="flex-col items-center">
+            <View className="w-8 h-8 bg-blue-500 rounded-full items-center justify-center mb-1">
               <Text className="text-white font-bold text-sm">4</Text>
             </View>
-            <Text className="text-blue-600 text-sm font-medium">Review</Text>
+            <Text className="text-blue-600 text-xs font-medium">Review</Text>
           </View>
         </View>
-        
+
         {/* Progress Bar */}
         <View className="mb-2">
           <View className="flex-row items-center justify-between mb-2">
@@ -203,60 +202,56 @@ const BusinessRegistrationStep4: React.FC<BusinessRegistrationStep4Props> = ({
           />
 
           {/* Uploaded Documents */}
-          <View className="bg-white rounded-2xl p-4 mb-4 shadow-sm">
-            <View className="flex-row items-center justify-between mb-4">
+          <View className="bg-white rounded-2xl p-6 mb-4 shadow-sm">
+            <View className="flex-row items-center justify-between mb-6">
               <Text className="text-lg font-bold text-gray-900">Uploaded Documents</Text>
-              <TouchableOpacity 
+              <TouchableOpacity
                 onPress={() => onEdit('documents')}
-                className="flex-row items-center bg-gray-100 px-3 py-1.5 rounded-lg"
+                className="px-0"
               >
-                <Text className="text-gray-700 text-sm font-medium mr-1">Edit</Text>
-                <Ionicons name="pencil" size={14} color="#374151" />
+                <Text className="text-blue-600 text-sm font-medium">Edit</Text>
               </TouchableOpacity>
             </View>
-            
+
             {uploadedDocuments.map((doc, index) => (
-              <View key={index} className="flex-row items-center justify-between mb-3 last:mb-0">
+              <View key={index} className="flex-row items-center justify-between mb-4 last:mb-0">
                 <View className="flex-row items-center flex-1">
-                  <View className="w-10 h-10 bg-blue-100 rounded-lg items-center justify-center mr-3">
-                    <Ionicons name="document-text" size={20} color="#3B82F6" />
+                  <View className="w-12 h-12 bg-blue-100 rounded-lg items-center justify-center mr-4">
+                    <Ionicons name="document-text" size={24} color="#3B82F6" />
                   </View>
                   <View className="flex-1">
-                    <Text className="text-gray-900 font-medium text-sm">{doc.name}</Text>
-                    <Text className="text-gray-600 text-xs">{doc.type} • {doc.size}</Text>
+                    <Text className="text-gray-900 font-medium text-base mb-1">{doc.name}</Text>
+                    <Text className="text-gray-500 text-sm">{doc.type} • {doc.size}</Text>
                   </View>
                 </View>
                 <View className="w-6 h-6 bg-green-500 rounded-full items-center justify-center">
-                  <Ionicons name="checkmark" size={14} color="white" />
+                  <Ionicons name="checkmark" size={16} color="white" />
                 </View>
               </View>
             ))}
           </View>
 
           {/* Agreement Checkbox */}
-          <View className="bg-white rounded-2xl p-4 mb-6 shadow-sm">
-            <TouchableOpacity
-              onPress={() => setAgreementChecked(!agreementChecked)}
-              className="flex-row items-start"
-            >
-              <View className={`w-5 h-5 border-2 rounded mr-3 mt-0.5 items-center justify-center ${
-                agreementChecked ? 'bg-blue-500 border-blue-500' : 'border-gray-300'
+          <TouchableOpacity
+            onPress={() => setAgreementChecked(!agreementChecked)}
+            className="flex-row items-start mb-6"
+          >
+            <View className={`w-5 h-5 border-2 rounded mr-3 mt-0.5 items-center justify-center ${agreementChecked ? 'bg-blue-500 border-blue-500' : 'border-gray-300'
               }`}>
-                {agreementChecked && (
-                  <Ionicons name="checkmark" size={14} color="white" />
-                )}
-              </View>
-              <View className="flex-1">
-                <Text className="text-gray-900 text-sm leading-5">
-                  I acknowledge that all information provided is accurate and complete.{' '}
-                  I agree to the{' '}
-                  <Text className="text-blue-600 underline">Privacy Policy</Text>
-                  {' '}and{' '}
-                  <Text className="text-blue-600 underline">Terms of Service</Text>
-                </Text>
-              </View>
-            </TouchableOpacity>
-          </View>
+              {agreementChecked && (
+                <Ionicons name="checkmark" size={14} color="white" />
+              )}
+            </View>
+            <View className="flex-1">
+              <Text className="text-gray-700 text-sm leading-5">
+                I acknowledge that all information provided is accurate and complete.{'\n'}
+                I agree to the{' '}
+                <Text className="text-blue-600">Privacy Policy</Text>
+                {' '}and{' '}
+                <Text className="text-blue-600">Terms of Service</Text>
+              </Text>
+            </View>
+          </TouchableOpacity>
 
           {/* Processing Information */}
           <View className="bg-blue-50 rounded-2xl p-4 mb-6">
@@ -266,54 +261,42 @@ const BusinessRegistrationStep4: React.FC<BusinessRegistrationStep4Props> = ({
               </View>
               <Text className="text-blue-900 font-semibold">Processing Time</Text>
             </View>
-            <Text className="text-blue-800 mb-3">
+            <Text className="text-blue-800">
               Your application will be reviewed within {processingTime}. You'll receive email updates on the status.
             </Text>
-            <View className="bg-blue-100 rounded-lg p-3">
-              <Text className="text-blue-900 text-sm font-medium mb-1">What happens next:</Text>
-              <Text className="text-blue-800 text-sm">
-                1. Application review and verification{'\n'}
-                2. Document validation{'\n'}
-                3. Final approval and certificate issuance
-              </Text>
-            </View>
           </View>
 
           {/* Application Fee */}
-          <View className="bg-white rounded-2xl p-4 mb-6 shadow-sm">
-            <Text className="text-lg font-bold text-gray-900 mb-4">Application Fee</Text>
-            <View className="flex-row justify-between items-center">
-              <Text className="text-gray-600">Includes state filing fee and processing</Text>
-              <Text className="text-2xl font-bold text-gray-900">${applicationFee.toFixed(2)}</Text>
+          <View className="flex-row justify-between items-center mb-6">
+            <View className="flex-1">
+              <Text className="text-lg font-bold text-gray-900 mb-1">Application Fee</Text>
+              <Text className="text-gray-500 text-sm">Includes state filing fee and processing</Text>
             </View>
+            <Text className="text-2xl font-bold text-gray-900">${applicationFee.toFixed(2)}</Text>
           </View>
+
+          {/* Submit Button */}
+          <TouchableOpacity
+            onPress={handleSubmit}
+            className={`py-4 rounded-2xl ${agreementChecked ? 'bg-blue-500' : 'bg-gray-300'
+              }`}
+            disabled={!agreementChecked}
+          >
+            <View className="flex-row items-center justify-center">
+              <Ionicons
+                name="paper-plane"
+                size={18}
+                color={agreementChecked ? 'white' : '#6B7280'}
+                style={{ marginRight: 8 }}
+              />
+              <Text className={`text-lg font-semibold ${agreementChecked ? 'text-white' : 'text-gray-500'
+                }`}>
+                Submit for Approval
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
       </ScrollView>
-
-      {/* Submit Button */}
-      <View className="bg-white border-t border-gray-200 px-4 py-4">
-        <TouchableOpacity
-          onPress={handleSubmit}
-          className={`py-4 rounded-xl ${
-            agreementChecked ? 'bg-blue-500' : 'bg-gray-300'
-          }`}
-          disabled={!agreementChecked}
-        >
-          <View className="flex-row items-center justify-center">
-            <Ionicons 
-              name="paper-plane" 
-              size={16} 
-              color={agreementChecked ? 'white' : '#6B7280'}
-              className="mr-2"
-            />
-            <Text className={`font-semibold ${
-              agreementChecked ? 'text-white' : 'text-gray-500'
-            }`}>
-              Submit for Approval
-            </Text>
-          </View>
-        </TouchableOpacity>
-      </View>
     </SafeAreaView>
   );
 };
