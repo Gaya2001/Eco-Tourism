@@ -138,7 +138,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                 <View style={styles.welcomeCard}>
                     <View style={{ flex: 1 }}>
                         <Text style={styles.welcomeTitle}>Welcome back, Admin!</Text>
-                        <Text style={styles.welcomeSubtitle}>Here's what's happening today</Text>
+                        <Text style={styles.welcomeSubtitle}>Here&apos;s what&apos;s happening today</Text>
                         <View style={styles.welcomeStatsRow}>
                             <View style={styles.welcomeStat}>
                                 <Text style={styles.welcomeStatValue}>127</Text>
@@ -208,7 +208,7 @@ export default function AdminDashboard({ onLogout }: AdminDashboardProps) {
                         </View>
                         <View style={styles.activityTextBox}>
                             <Text style={styles.activityTitle}>Application approved</Text>
-                            <Text style={styles.activityDesc}>John Doe's eco project was approved</Text>
+                            <Text style={styles.activityDesc}>John Doe&apos;s eco project was approved</Text>
                             <Text style={styles.activityTime}>2 minutes ago</Text>
                         </View>
                     </View>
