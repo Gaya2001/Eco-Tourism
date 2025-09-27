@@ -5,6 +5,7 @@ export { default as RoleSelectionScreen } from './RoleSelectionScreen';
 export { default as SignUpScreen } from './SignUpScreen';
 export { default as SignInScreen } from './SignInScreen';
 export { default as HomeScreen } from './HomeScreen';
+export { default as AdminDashboard } from './AdminDashboard';
 
 // New screens
 export { default as EventsScreen } from './EventsScreen';

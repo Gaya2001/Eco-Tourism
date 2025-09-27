@@ -8,6 +8,7 @@ import {
   SignInScreen,
   HomeScreen,
   EcoBizDashboardScreen,
+  AdminDashboard,
   BusinessRegistrationStep1,
   BusinessRegistrationStep2,
   BusinessRegistrationStep3,
@@ -24,7 +25,7 @@ import {
 } from '../screens';
 import { Colors } from '../constants';
 
-type AppFlowState = 'splash' | 'onboarding' | 'welcome' | 'roleSelection' | 'signUp' | 'signIn' | 'home' | 'bizDashboard' | 'businessRegistration1' | 'businessRegistration2' | 'businessRegistration3' | 'businessRegistration4' | 'certificationStatus' | 'directory' | 'rewards' | 'notifications' | 'profile' | 'hotelDetail' | 'reviews' | 'events';
+type AppFlowState = 'splash' | 'onboarding' | 'welcome' | 'roleSelection' | 'signUp' | 'signIn' | 'home' | 'bizDashboard' | 'adminDashboard' | 'businessRegistration1' | 'businessRegistration2' | 'businessRegistration3' | 'businessRegistration4' | 'certificationStatus' | 'directory' | 'rewards' | 'notifications' | 'profile' | 'hotelDetail' | 'reviews' | 'events';
 
 interface User {
   id: string;
@@ -83,8 +84,19 @@ const AppFlow: React.FC = () => {
       await new Promise(resolve => setTimeout(resolve, 1500));
       
       // Determine role based on email
-      const role = credentials.email === 'business@gmail.com' ? 'businessman' : 'tourist';
-      const userName = role === 'businessman' ? 'Business Owner' : 'John Doe';
+      let role: 'tourist' | 'businessman' | 'admin';
+      let userName: string;
+      
+      if (credentials.email === 'business@gmail.com') {
+        role = 'businessman';
+        userName = 'Business Owner';
+      } else if (credentials.email === 'admin@gmail.com') {
+        role = 'admin';
+        userName = 'Admin';
+      } else {
+        role = 'tourist';
+        userName = 'John Doe';
+      }
       
       const existingUser: User = {
         id: '1',
@@ -98,6 +110,8 @@ const AppFlow: React.FC = () => {
       // Navigate to appropriate dashboard based on role
       if (role === 'businessman') {
         setCurrentFlow('bizDashboard');
+      } else if (role === 'admin') {
+        setCurrentFlow('adminDashboard');
       } else {
         setCurrentFlow('home');
       }
@@ -305,6 +319,9 @@ const AppFlow: React.FC = () => {
           onLogout={handleLogout}
         />
       );
+
+    case 'adminDashboard':
+      return <AdminDashboard onLogout={handleLogout} />;
     
     case 'businessRegistration1':
       return (
