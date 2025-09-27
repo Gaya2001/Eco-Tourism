@@ -23,6 +23,10 @@ interface DashboardScreenProps {
     level: number;
     ecoPoints: number;
   };
+  onNavigateToProfile?: () => void;
+  onNavigateToNotifications?: () => void;
+  onNavigateToHome?: () => void;
+  onLogout?: () => void;
 }
 
 const DashboardScreen: React.FC<DashboardScreenProps> = ({ 
@@ -30,7 +34,11 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({
     name: 'John',
     level: 3,
     ecoPoints: 1250
-  }
+  },
+  onNavigateToProfile,
+  onNavigateToNotifications,
+  onNavigateToHome,
+  onLogout
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -160,18 +168,38 @@ const DashboardScreen: React.FC<DashboardScreenProps> = ({
         >
           <View style={styles.headerContent}>
             <View style={styles.userInfo}>
-              <View style={styles.avatar}>
+              <TouchableOpacity 
+                style={styles.avatar}
+                onPress={onNavigateToProfile}
+              >
                 <Text style={styles.avatarText}>{user.name.charAt(0)}</Text>
-              </View>
+              </TouchableOpacity>
               <View>
                 <Text style={styles.greeting}>Good morning,</Text>
                 <Text style={styles.userName}>{user.name}!</Text>
               </View>
             </View>
-            <TouchableOpacity style={styles.notificationButton}>
-              <Ionicons name="notifications" size={24} color={Colors.white} />
-              <View style={styles.notificationBadge} />
-            </TouchableOpacity>
+            <View style={styles.headerButtons}>
+              <TouchableOpacity 
+                style={styles.notificationButton}
+                onPress={onNavigateToNotifications}
+              >
+                <Ionicons name="notifications" size={24} color={Colors.white} />
+                <View style={styles.notificationBadge} />
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={styles.menuButton}
+                onPress={onNavigateToHome}
+              >
+                <Ionicons name="home-outline" size={24} color={Colors.white} />
+              </TouchableOpacity>
+              <TouchableOpacity 
+                style={styles.menuButton}
+                onPress={onLogout}
+              >
+                <Ionicons name="log-out-outline" size={24} color={Colors.white} />
+              </TouchableOpacity>
+            </View>
           </View>
 
           {/* Eco Journey Stats */}
@@ -324,6 +352,14 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     backgroundColor: '#ef4444',
+  },
+  headerButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  menuButton: {
+    padding: Theme.spacing.sm,
   },
   statsContainer: {
     flexDirection: 'row',

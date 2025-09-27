@@ -37,7 +37,7 @@ const AppFlow: React.FC = () => {
     setCurrentFlow('welcome');
   };
 
-  const handleRoleSelect = (role: string) => {
+  const handleRoleSelect = (_role: string) => {
     setCurrentFlow('signUp');
   };
 
@@ -164,6 +164,33 @@ const AppFlow: React.FC = () => {
         />
       );
     
+    case 'home':
+      return (
+        <HomeScreen 
+          user={{
+            name: user?.name || 'Sarah',
+          }}
+          onNavigateToProfile={handleNavigateToProfile}
+          onNavigateToNotifications={handleNavigateToNotifications}
+          onNavigateToDirectory={handleNavigateToDirectory}
+          onNavigateToRewards={() => setCurrentFlow('rewards')}
+        />
+      );
+
+    case 'directory':
+      return (
+        <DirectoryScreen 
+          onNavigateBack={handleNavigateBack}
+          onNavigateToHome={() => setCurrentFlow('home')}
+          onNavigateToProfile={handleNavigateToProfile}
+          onNavigateToRewards={() => setCurrentFlow('rewards')}
+          onNavigateToHotelDetail={(businessId: string) => {
+            setSelectedBusinessId(businessId);
+            setCurrentFlow('hotelDetail');
+          }}
+        />
+      );
+
     case 'dashboard':
       return (
         <DashboardScreen 
