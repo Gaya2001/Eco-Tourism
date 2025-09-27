@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 interface BusinessRegistrationStep1Props {
   onNext: (data: BusinessInfo) => void;
   onSaveDraft: (data: BusinessInfo) => void;
+  onBack: () => void;
 }
 
 interface BusinessInfo {
@@ -51,6 +52,7 @@ const industries = [
 const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
   onNext,
   onSaveDraft,
+  onBack,
 }) => {
   const [formData, setFormData] = useState<BusinessInfo>({
     businessName: '',
@@ -153,7 +155,10 @@ const BusinessRegistrationStep1: React.FC<BusinessRegistrationStep1Props> = ({
       {/* Header */}
       <View className="bg-white px-4 py-4 border-b border-gray-200">
         <View className="flex-row items-center mb-4">
-          <TouchableOpacity className="w-10 h-10 items-center justify-center -ml-2">
+          <TouchableOpacity 
+            className="w-10 h-10 items-center justify-center -ml-2"
+            onPress={onBack}
+          >
             <Ionicons name="arrow-back" size={24} color="#1F2937" />
           </TouchableOpacity>
           <View className="flex-1 items-center">

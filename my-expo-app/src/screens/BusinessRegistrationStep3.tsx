@@ -81,14 +81,6 @@ const BusinessRegistrationStep3: React.FC<BusinessRegistrationStep3Props> = ({
     },
   ]);
 
-  const [additionalFiles, setAdditionalFiles] = useState([
-    {
-      name: 'statement-feb-2024.pdf',
-      size: '2.1 MB',
-      uploaded: true,
-    },
-  ]);
-
   const handleFileUpload = (documentId: string) => {
     // Simulate file upload
     Alert.alert('File Upload', 'File selection would open here in a real app', [
@@ -102,10 +94,15 @@ const BusinessRegistrationStep3: React.FC<BusinessRegistrationStep3Props> = ({
                 ...doc,
                 isUploaded: true,
                 fileName: `${doc.name.toLowerCase().replace(/\s+/g, '-')}.pdf`,
-                fileSize: '2.5 MB'
+                fileSize: `${(Math.random() * 3 + 1).toFixed(1)} MB`
               }
               : doc
           ));
+          
+          // Show success message
+          setTimeout(() => {
+            Alert.alert('Success', 'File uploaded successfully!');
+          }, 500);
         }
       }
     ]);
@@ -129,20 +126,47 @@ const BusinessRegistrationStep3: React.FC<BusinessRegistrationStep3Props> = ({
   };
 
   const addMoreFiles = () => {
-    Alert.alert('Add Files', 'Additional file selection would open here');
+    Alert.alert('Add More Files', 'Select additional document to upload', [
+      { text: 'Cancel', style: 'cancel' },
+      {
+        text: 'Business Plan',
+        onPress: () => addDocument('Business Plan', 'Strategic business document', 'document-text', 'purple', false)
+      },
+      {
+        text: 'Financial Statement',
+        onPress: () => addDocument('Financial Statement', 'Company financial records', 'stats-chart', 'green', false)
+      },
+      {
+        text: 'Other Document',
+        onPress: () => addDocument('Additional Document', 'Supporting document', 'folder', 'orange', false)
+      }
+    ]);
+  };
+
+  const addDocument = (name: string, type: string, icon: string, color: string, isRequired: boolean) => {
+    const newDoc: Document = {
+      id: `additional-${Date.now()}`,
+      name,
+      type,
+      isRequired,
+      isUploaded: false,
+      icon,
+      color,
+    };
+    setDocuments(prev => [...prev, newDoc]);
   };
 
   const uploadProgress = Math.round((documents.filter(doc => doc.isUploaded).length / documents.length) * 100);
   const requiredDocuments = documents.filter(doc => doc.isRequired);
-  const requiredUploaded = requiredDocuments.filter(doc => doc.isUploaded).length;
 
   const canProceed = requiredDocuments.every(doc => doc.isUploaded);
 
   const handleNext = () => {
     if (!canProceed) {
+      const missingDocs = requiredDocuments.filter(doc => !doc.isUploaded).map(doc => doc.name);
       Alert.alert(
         'Missing Required Documents',
-        'Please upload all required documents before proceeding.'
+        `Please upload the following required documents:\n• ${missingDocs.join('\n• ')}`
       );
       return;
     }
@@ -340,27 +364,7 @@ const BusinessRegistrationStep3: React.FC<BusinessRegistrationStep3Props> = ({
             <DocumentCard key={document.id} document={document} />
           ))}
 
-          {/* Additional Files */}
-          {additionalFiles.length > 0 && (
-            <View className="mb-6">
-              {additionalFiles.map((file, index) => (
-                <View key={index} className="bg-gray-50 rounded-xl p-3 mb-2">
-                  <View className="flex-row items-center justify-between">
-                    <View className="flex-row items-center flex-1">
-                      <Ionicons name="document" size={16} color="#10B981" />
-                      <View className="ml-2 flex-1">
-                        <Text className="text-gray-900 font-medium text-sm">{file.name}</Text>
-                        <Text className="text-gray-600 text-xs">{file.size} • Uploaded</Text>
-                      </View>
-                    </View>
-                    <TouchableOpacity className="w-8 h-8 bg-red-100 rounded-full items-center justify-center">
-                      <Ionicons name="trash" size={16} color="#EF4444" />
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              ))}
-            </View>
-          )}
+
 
           {/* Add More Files */}
           <TouchableOpacity
