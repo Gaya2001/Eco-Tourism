@@ -20,6 +20,7 @@ interface HomeScreenProps {
   onNavigateToNotifications?: () => void;
   onNavigateToDirectory?: () => void;
   onNavigateToRewards?: () => void;
+  onNavigateToEvents?: () => void;
 }
 
 interface EcoImpact {
@@ -65,7 +66,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
   onNavigateToProfile,
   onNavigateToNotifications,
   onNavigateToDirectory,
-  onNavigateToRewards
+  onNavigateToRewards,
+  onNavigateToEvents
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<'Hotels' | 'Trails' | 'Parks'>('Hotels');
@@ -419,6 +421,30 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
               View Rewards & Achievements
             </Text>
           </TouchableOpacity>
+
+          {/* Events Button */}
+          <TouchableOpacity
+            onPress={onNavigateToEvents}
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.2)',
+              paddingVertical: 12,
+              paddingHorizontal: 20,
+              borderRadius: 12,
+              marginTop: 12,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <Text style={{ fontSize: 18, marginRight: 8 }}>🎉</Text>
+            <Text style={{
+              color: 'white',
+              fontSize: 16,
+              fontWeight: '600'
+            }}>
+              View Events & Activities
+            </Text>
+          </TouchableOpacity>
         </View>
 
         {/* Recommended for You Section */}
@@ -705,7 +731,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
             fontWeight: '700',
             marginBottom: 16
           }}>
-            Today's Eco Tip
+            Today&apos;s Eco Tip
           </Text>
 
           <View style={{
@@ -755,17 +781,20 @@ const HomeScreen: React.FC<HomeScreenProps> = ({
         activeTab="home"
         onTabPress={(tab: BottomNavTab) => {
           switch (tab) {
+            case 'home':
+              // Already on home, do nothing
+              break;
             case 'directory':
               onNavigateToDirectory?.();
+              break;
+            case 'events':
+              onNavigateToEvents?.();
               break;
             case 'rewards':
               onNavigateToRewards?.();
               break;
             case 'profile':
               onNavigateToProfile?.();
-              break;
-            case 'home':
-              // Already on home, do nothing
               break;
           }
         }}
