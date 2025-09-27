@@ -11,9 +11,13 @@ import { Ionicons } from '@expo/vector-icons';
 
 interface CertificationStatusProps {
   onBack?: () => void;
+  hasCompletedBusinessRegistration?: boolean;
 }
 
-const CertificationStatusScreen: React.FC<CertificationStatusProps> = ({ onBack }) => {
+const CertificationStatusScreen: React.FC<CertificationStatusProps> = ({ 
+  onBack, 
+  hasCompletedBusinessRegistration = false 
+}) => {
   const certificationInfo = {
     title: 'Digital Marketing Professional',
     id: '#DMP-2024-001',
@@ -153,39 +157,74 @@ const CertificationStatusScreen: React.FC<CertificationStatusProps> = ({ onBack 
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
-        {/* Certification Header */}
-        <View className="bg-white mx-4 mt-6 rounded-2xl p-6 shadow-sm items-center">
-          <View className="w-20 h-20 bg-blue-100 rounded-full items-center justify-center mb-5">
-            <Ionicons name="ribbon" size={36} color="#3B82F6" />
-          </View>
-          <Text className="text-xl font-bold text-gray-900 text-center mb-2 leading-6">
-            {certificationInfo.title}
-          </Text>
-          <Text className="text-gray-500 mb-5 text-sm">
-            Certification ID: {certificationInfo.id}
-          </Text>
-
-          <View className="flex-row items-center mb-1">
-            <Text className="text-gray-700 text-sm font-medium mr-2">Current Status</Text>
-          </View>
-          <View className="mb-4">
-            <Text className="text-orange-600 font-semibold bg-orange-100 px-4 py-2 rounded-full text-sm">
-              {certificationInfo.currentStatus}
+        {!hasCompletedBusinessRegistration ? (
+          /* No Certification Data for New Businessmen */
+          <View className="bg-white mx-4 mt-6 rounded-2xl p-8 shadow-sm items-center">
+            <View className="w-24 h-24 bg-gray-100 rounded-full items-center justify-center mb-6">
+              <Ionicons name="document-text-outline" size={40} color="#9CA3AF" />
+            </View>
+            <Text className="text-xl font-bold text-gray-900 text-center mb-3 leading-6">
+              No Certifications Yet
             </Text>
-          </View>
+            <Text className="text-gray-500 text-center text-sm leading-5 mb-6">
+              Complete your business registration to start applying for eco-certifications and showcase your sustainability efforts.
+            </Text>
+            
+            <View className="bg-blue-50 border border-blue-200 rounded-xl p-4 w-full mb-4">
+              <View className="flex-row items-center mb-2">
+                <Ionicons name="information-circle" size={20} color="#3B82F6" />
+                <Text className="text-blue-800 font-semibold text-sm ml-2">Next Steps</Text>
+              </View>
+              <Text className="text-blue-700 text-sm leading-5">
+                1. Complete business registration{'\n'}
+                2. Upload required documents{'\n'}
+                3. Apply for eco-certifications{'\n'}
+                4. Track your certification progress
+              </Text>
+            </View>
 
-          <View className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
-            <View
-              className="bg-blue-500 h-2.5 rounded-full"
-              style={{ width: `${(certificationInfo.completedSteps / certificationInfo.totalSteps) * 100}%` }}
-            />
+            <TouchableOpacity 
+              onPress={onBack}
+              className="bg-blue-500 px-6 py-3 rounded-xl"
+            >
+              <Text className="text-white font-semibold">Complete Registration</Text>
+            </TouchableOpacity>
           </View>
-          <Text className="text-gray-600 text-sm font-medium">
-            Step {certificationInfo.completedSteps} of {certificationInfo.totalSteps} completed
-          </Text>
-        </View>
+        ) : (
+          <>
+            {/* Certification Header */}
+            <View className="bg-white mx-4 mt-6 rounded-2xl p-6 shadow-sm items-center">
+              <View className="w-20 h-20 bg-blue-100 rounded-full items-center justify-center mb-5">
+                <Ionicons name="ribbon" size={36} color="#3B82F6" />
+              </View>
+              <Text className="text-xl font-bold text-gray-900 text-center mb-2 leading-6">
+                {certificationInfo.title}
+              </Text>
+              <Text className="text-gray-500 mb-5 text-sm">
+                Certification ID: {certificationInfo.id}
+              </Text>
 
-        {/* Certification Timeline */}
+              <View className="flex-row items-center mb-1">
+                <Text className="text-gray-700 text-sm font-medium mr-2">Current Status</Text>
+              </View>
+              <View className="mb-4">
+                <Text className="text-orange-600 font-semibold bg-orange-100 px-4 py-2 rounded-full text-sm">
+                  {certificationInfo.currentStatus}
+                </Text>
+              </View>
+
+              <View className="w-full bg-gray-200 rounded-full h-2.5 mb-2">
+                <View
+                  className="bg-blue-500 h-2.5 rounded-full"
+                  style={{ width: `${(certificationInfo.completedSteps / certificationInfo.totalSteps) * 100}%` }}
+                />
+              </View>
+              <Text className="text-gray-600 text-sm font-medium">
+                Step {certificationInfo.completedSteps} of {certificationInfo.totalSteps} completed
+              </Text>
+            </View>
+            
+            {/* Certification Timeline */}
         <View className="bg-white mx-4 mt-6 rounded-2xl p-5 shadow-sm">
           <Text className="text-lg font-bold text-gray-900 mb-5">Certification Timeline</Text>
 
@@ -337,6 +376,8 @@ const CertificationStatusScreen: React.FC<CertificationStatusProps> = ({ onBack 
             <Text className="text-gray-700 font-semibold ml-2 text-sm">Contact Support</Text>
           </TouchableOpacity>
         </View>
+          </>
+        )}
       </ScrollView>
     </SafeAreaView>
   );
