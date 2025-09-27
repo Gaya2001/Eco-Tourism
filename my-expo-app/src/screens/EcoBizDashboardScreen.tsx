@@ -24,7 +24,21 @@ interface Certification {
   status: 'approved' | 'pending' | 'rejected';
 }
 
-const EcoBizDashboardScreen: React.FC = () => {
+interface EcoBizDashboardProps {
+  user?: {
+    name: string;
+  };
+  hasCompletedBusinessRegistration?: boolean;
+  onStartBusinessRegistration?: () => void;
+  onNavigateToCertificationStatus?: () => void;
+}
+
+const EcoBizDashboardScreen: React.FC<EcoBizDashboardProps> = ({ 
+  user, 
+  hasCompletedBusinessRegistration = false, 
+  onStartBusinessRegistration,
+  onNavigateToCertificationStatus
+}) => {
   const certificationProgress: CertificationProgress[] = [
     {
       id: '1',
@@ -162,154 +176,196 @@ const EcoBizDashboardScreen: React.FC = () => {
       <ScrollView showsVerticalScrollIndicator={false} className="flex-1">
         {/* Welcome Section */}
         <View className="bg-green-500 mx-4 mt-4 rounded-2xl px-5 py-6 mb-4">
-          <Text className="text-white text-2xl font-bold mb-1">Welcome back, Sarah!</Text>
-          <Text className="text-green-100 text-base">Let's continue building your eco-profile</Text>
+          <Text className="text-white text-2xl font-bold mb-1">Welcome back, {user?.name || 'Business Owner'}!</Text>
+          <Text className="text-green-100 text-base">
+            {hasCompletedBusinessRegistration 
+              ? "Let&apos;s continue building your eco-profile" 
+              : "Complete your business registration to get started"
+            }
+          </Text>
         </View>
 
-        {/* Eco-Profile Status */}
-        <View className="bg-white mx-4 rounded-2xl p-4 shadow-sm">
-          <View className="flex-row items-center justify-between mb-4">
-            <Text className="text-xl font-bold text-gray-900">Eco-Profile Status</Text>
-            <View className="flex-row items-center">
-              <View className="w-2 h-2 bg-green-500 rounded-full mr-2" />
-              <Text className="text-green-600 font-medium">Active</Text>
-            </View>
-          </View>
-
-          <View className="mb-4">
-            <View className="flex-row items-center justify-between mb-2">
-              <Text className="text-gray-600">Profile Completion</Text>
-              <Text className="text-gray-900 font-semibold">75%</Text>
-            </View>
-            <View className="w-full h-2 bg-gray-200 rounded-full">
-              <View className="w-3/4 h-2 bg-green-500 rounded-full" />
-            </View>
-          </View>
-
-          {/* Status Items */}
-          <View className="flex-row justify-between px-2">
-            <View className="items-center flex-1 mx-2">
-              <View className="w-14 h-14 bg-green-100 rounded-2xl items-center justify-center mb-3">
-                <Ionicons name="business" size={28} color="#10B981" />
+        {/* Business Registration or Eco-Profile Status */}
+        {!hasCompletedBusinessRegistration ? (
+          /* Business Registration Section */
+          <View className="bg-white mx-4 rounded-2xl p-6 shadow-sm">
+            <View className="items-center">
+              <View className="w-20 h-20 bg-blue-100 rounded-full items-center justify-center mb-4">
+                <Ionicons name="briefcase-outline" size={40} color="#3B82F6" />
               </View>
-              <Text className="text-sm text-gray-600 text-center mb-1 font-medium">Company Info</Text>
-              <Text className="text-sm text-green-600 font-semibold">Complete</Text>
-            </View>
-
-            <View className="items-center flex-1 mx-2">
-              <View className="w-14 h-14 bg-orange-100 rounded-2xl items-center justify-center mb-3">
-                <Ionicons name="star" size={28} color="#F59E0B" />
+              <Text className="text-xl font-bold text-gray-900 text-center mb-2">
+                Complete Your Business Registration
+              </Text>
+              <Text className="text-gray-600 text-center mb-6 leading-relaxed">
+                Register your business to access eco-certifications, showcase your sustainability efforts, and connect with eco-conscious travelers.
+              </Text>
+              
+              <TouchableOpacity
+                onPress={onStartBusinessRegistration}
+                className="bg-blue-500 px-8 py-4 rounded-xl flex-row items-center"
+              >
+                <Ionicons name="arrow-forward" size={20} color="white" />
+                <Text className="text-white font-semibold text-lg ml-2">
+                  Start Business Registration
+                </Text>
+              </TouchableOpacity>
+              
+              <View className="flex-row items-center mt-4">
+                <Ionicons name="time-outline" size={16} color="#6B7280" />
+                <Text className="text-gray-500 text-sm ml-1">Takes about 10-15 minutes</Text>
               </View>
-              <Text className="text-sm text-gray-600 text-center mb-1 font-medium">Certifications</Text>
-              <Text className="text-sm text-orange-600 font-semibold">Pending</Text>
-            </View>
-
-            <View className="items-center flex-1 mx-2">
-              <View className="w-14 h-14 bg-gray-100 rounded-2xl items-center justify-center mb-3">
-                <Ionicons name="document" size={28} color="#6B7280" />
-              </View>
-              <Text className="text-sm text-gray-600 text-center mb-1 font-medium">Documents</Text>
-              <Text className="text-sm text-gray-500 font-semibold">Incomplete</Text>
             </View>
           </View>
-        </View>
+        ) : (
+          /* Eco-Profile Status Section */
+          <View className="bg-white mx-4 rounded-2xl p-4 shadow-sm">
+            <View className="flex-row items-center justify-between mb-4">
+              <Text className="text-xl font-bold text-gray-900">Eco-Profile Status</Text>
+              <View className="flex-row items-center">
+                <View className="w-2 h-2 bg-green-500 rounded-full mr-2" />
+                <Text className="text-green-600 font-medium">Active</Text>
+              </View>
+            </View>
 
-        {/* Certification Progress */}
-        <View className="bg-white mx-4 mt-4 rounded-2xl p-4 shadow-sm">
-          <View className="flex-row items-center justify-between mb-4">
-            <Text className="text-xl font-bold text-gray-900">Certification Progress</Text>
-            <Text className="text-orange-600 font-medium">In Review</Text>
-          </View>
+            <View className="mb-4">
+              <View className="flex-row items-center justify-between mb-2">
+                <Text className="text-gray-600">Profile Completion</Text>
+                <Text className="text-gray-900 font-semibold">75%</Text>
+              </View>
+              <View className="w-full h-2 bg-gray-200 rounded-full">
+                <View className="w-3/4 h-2 bg-green-500 rounded-full" />
+              </View>
+            </View>
 
-          {certificationProgress.map((item, index) => (
-            <View key={item.id} className="flex-row items-start mb-4 last:mb-0">
-              <View className="items-center mr-4">
-                <View className={`w-8 h-8 rounded-full items-center justify-center ${getStatusColor(item.status)}`}>
-                  <Ionicons
-                    name={getStatusIcon(item.status) as any}
-                    size={16}
-                    color="white"
-                  />
+            {/* Status Items */}
+            <View className="flex-row justify-between px-2">
+              <View className="items-center flex-1 mx-2">
+                <View className="w-14 h-14 bg-green-100 rounded-2xl items-center justify-center mb-3">
+                  <Ionicons name="business" size={28} color="#10B981" />
                 </View>
-                {index < certificationProgress.length - 1 && (
-                  <View className="w-0.5 h-6 bg-gray-200 mt-2" />
-                )}
+                <Text className="text-sm text-gray-600 text-center mb-1 font-medium">Company Info</Text>
+                <Text className="text-sm text-green-600 font-semibold">Complete</Text>
               </View>
-              <View className="flex-1">
-                <Text className="text-gray-900 font-semibold mb-1">{item.title}</Text>
-                <Text className="text-gray-600 text-sm">{item.date}</Text>
-                {item.status === 'in-progress' && (
-                  <View className="bg-orange-50 mt-2 p-2 rounded-lg">
-                    <View className="flex-row items-center">
-                      <Ionicons name="time" size={16} color="#F59E0B" />
-                      <Text className="text-orange-700 text-sm ml-2">Review in progress</Text>
-                    </View>
-                    <Text className="text-orange-600 text-sm mt-1">Expected completion: Dec 22, 2024</Text>
-                  </View>
-                )}
-                {item.status === 'completed' && (
-                  <View className="bg-green-50 mt-2 p-2 rounded-lg">
-                    <View className="flex-row items-center">
-                      <Ionicons name="checkmark-circle" size={16} color="#10B981" />
-                      <Text className="text-green-700 text-sm ml-2">All documents verified</Text>
-                    </View>
-                    <Text className="text-green-600 text-sm mt-1">Portfolio, resume, and certificates approved</Text>
-                  </View>
-                )}
-                {item.status === 'pending' && (
-                  <View className="bg-gray-50 mt-2 p-2 rounded-lg">
-                    <View className="flex-row items-center">
-                      <Ionicons name="ellipse" size={16} color="#6B7280" />
-                      <Text className="text-gray-600 text-sm ml-2">Awaiting approval</Text>
-                    </View>
-                    <Text className="text-gray-500 text-sm mt-1">Digital certificate will be available here</Text>
-                  </View>
-                )}
+
+              <View className="items-center flex-1 mx-2">
+                <View className="w-14 h-14 bg-orange-100 rounded-2xl items-center justify-center mb-3">
+                  <Ionicons name="star" size={28} color="#F59E0B" />
+                </View>
+                <Text className="text-sm text-gray-600 text-center mb-1 font-medium">Certifications</Text>
+                <Text className="text-sm text-orange-600 font-semibold">Pending</Text>
+              </View>
+
+              <View className="items-center flex-1 mx-2">
+                <View className="w-14 h-14 bg-gray-100 rounded-2xl items-center justify-center mb-3">
+                  <Ionicons name="document" size={28} color="#6B7280" />
+                </View>
+                <Text className="text-sm text-gray-600 text-center mb-1 font-medium">Documents</Text>
+                <Text className="text-sm text-gray-500 font-semibold">Incomplete</Text>
               </View>
             </View>
-          ))}
-        </View>
+          </View>
+        )}
 
-        {/* Your Certifications */}
-        <View className="bg-white mx-4 mt-4 rounded-2xl p-4 shadow-sm">
-          <Text className="text-xl font-bold text-gray-900 mb-4">Your Certifications</Text>
+        {/* Certification Progress - Only show after business registration */}
+        {hasCompletedBusinessRegistration && (
+          <View className="bg-white mx-4 mt-4 rounded-2xl p-4 shadow-sm">
+            <View className="flex-row items-center justify-between mb-4">
+              <Text className="text-xl font-bold text-gray-900">Certification Progress</Text>
+              <Text className="text-orange-600 font-medium">In Review</Text>
+            </View>
 
-          <View className="flex-row flex-wrap justify-between">
-            {certifications.map((cert) => (
-              <View key={cert.id} className="w-[48%] mb-4">
-                <View className="border border-gray-200 rounded-2xl p-4 h-[120px] justify-between">
-                  <View className="flex-row items-center justify-between mb-2">
-                    <View className={`w-10 h-10 rounded-full items-center justify-center ${getStatusColor(cert.status)}`}>
-                      <Ionicons
-                        name={getStatusIcon(cert.status) as any}
-                        size={18}
-                        color="white"
-                      />
+            {certificationProgress.map((item, index) => (
+              <View key={item.id} className="flex-row items-start mb-4 last:mb-0">
+                <View className="items-center mr-4">
+                  <View className={`w-8 h-8 rounded-full items-center justify-center ${getStatusColor(item.status)}`}>
+                    <Ionicons
+                      name={getStatusIcon(item.status) as any}
+                      size={16}
+                      color="white"
+                    />
+                  </View>
+                  {index < certificationProgress.length - 1 && (
+                    <View className="w-0.5 h-6 bg-gray-200 mt-2" />
+                  )}
+                </View>
+                <View className="flex-1">
+                  <Text className="text-gray-900 font-semibold mb-1">{item.title}</Text>
+                  <Text className="text-gray-600 text-sm">{item.date}</Text>
+                  {item.status === 'in-progress' && (
+                    <View className="bg-orange-50 mt-2 p-2 rounded-lg">
+                      <View className="flex-row items-center">
+                        <Ionicons name="time" size={16} color="#F59E0B" />
+                        <Text className="text-orange-700 text-sm ml-2">Review in progress</Text>
+                      </View>
+                      <Text className="text-orange-600 text-sm mt-1">Expected completion: Dec 22, 2024</Text>
                     </View>
-                    <Text className={`text-sm font-semibold capitalize ${cert.status === 'approved' ? 'text-green-600' :
-                      cert.status === 'pending' ? 'text-orange-600' : 'text-red-600'
-                      }`}>
-                      {cert.status}
-                    </Text>
-                  </View>
-                  <View className="flex-1 justify-center">
-                    <Text className="font-bold text-gray-900 mb-2 text-base">{cert.name}</Text>
-                    <Text className="text-gray-600 text-sm leading-5">{cert.type}</Text>
-                  </View>
+                  )}
+                  {item.status === 'completed' && (
+                    <View className="bg-green-50 mt-2 p-2 rounded-lg">
+                      <View className="flex-row items-center">
+                        <Ionicons name="checkmark-circle" size={16} color="#10B981" />
+                        <Text className="text-green-700 text-sm ml-2">All documents verified</Text>
+                      </View>
+                      <Text className="text-green-600 text-sm mt-1">Portfolio, resume, and certificates approved</Text>
+                    </View>
+                  )}
+                  {item.status === 'pending' && (
+                    <View className="bg-gray-50 mt-2 p-2 rounded-lg">
+                      <View className="flex-row items-center">
+                        <Ionicons name="ellipse" size={16} color="#6B7280" />
+                        <Text className="text-gray-500 text-sm ml-2">Awaiting approval</Text>
+                      </View>
+                      <Text className="text-gray-500 text-sm mt-1">Digital certificate will be available here</Text>
+                    </View>
+                  )}
                 </View>
               </View>
             ))}
+          </View>
+        )}
 
-            {/* Add New Certificate */}
-            <View className="w-[48%] mb-4">
-              <TouchableOpacity className="border-2 border-dashed border-gray-300 rounded-2xl p-4 items-center justify-center h-[120px] bg-gray-50">
-                <Ionicons name="add-circle" size={32} color="#10B981" />
-                <Text className="text-gray-700 text-sm mt-2 text-center font-semibold">Add New</Text>
-                <Text className="text-gray-500 text-xs text-center leading-4">Apply for certification</Text>
-              </TouchableOpacity>
+        {/* Your Certifications - Only show after business registration */}
+        {hasCompletedBusinessRegistration && (
+          <View className="bg-white mx-4 mt-4 rounded-2xl p-4 shadow-sm">
+            <Text className="text-xl font-bold text-gray-900 mb-4">Your Certifications</Text>
+
+            <View className="flex-row flex-wrap justify-between">
+              {certifications.map((cert) => (
+                <View key={cert.id} className="w-[48%] mb-4">
+                  <View className="border border-gray-200 rounded-2xl p-4 h-[120px] justify-between">
+                    <View className="flex-row items-center justify-between mb-2">
+                      <View className={`w-10 h-10 rounded-full items-center justify-center ${getStatusColor(cert.status)}`}>
+                        <Ionicons
+                          name={getStatusIcon(cert.status) as any}
+                          size={18}
+                          color="white"
+                        />
+                      </View>
+                      <Text className={`text-sm font-semibold capitalize ${cert.status === 'approved' ? 'text-green-600' :
+                        cert.status === 'pending' ? 'text-orange-600' : 'text-red-600'
+                        }`}>
+                        {cert.status}
+                      </Text>
+                    </View>
+                    <View className="flex-1 justify-center">
+                      <Text className="font-bold text-gray-900 mb-2 text-base">{cert.name}</Text>
+                      <Text className="text-gray-600 text-sm leading-5">{cert.type}</Text>
+                    </View>
+                  </View>
+                </View>
+              ))}
+
+              {/* Add New Certificate */}
+              <View className="w-[48%] mb-4">
+                <TouchableOpacity className="border-2 border-dashed border-gray-300 rounded-2xl p-4 items-center justify-center h-[120px] bg-gray-50">
+                  <Ionicons name="add-circle" size={32} color="#10B981" />
+                  <Text className="text-gray-700 text-sm mt-2 text-center font-semibold">Add New</Text>
+                  <Text className="text-gray-500 text-xs text-center leading-4">Apply for certification</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
-        </View>
+        )}
 
         {/* Quick Actions */}
         <View className="mx-4 mt-4 mb-6">
@@ -347,7 +403,10 @@ const EcoBizDashboardScreen: React.FC = () => {
           <Text className="text-green-500 text-xs mt-1 font-medium">Home</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity className="items-center py-2 flex-1">
+        <TouchableOpacity 
+          className="items-center py-2 flex-1"
+          onPress={onNavigateToCertificationStatus}
+        >
           <Ionicons name="calendar" size={26} color="#9CA3AF" />
           <Text className="text-gray-400 text-xs mt-1 font-medium">Certifications</Text>
         </TouchableOpacity>
