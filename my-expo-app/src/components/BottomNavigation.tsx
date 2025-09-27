@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 
-export type BottomNavTab = 'home' | 'directory' | 'rewards' | 'profile';
+export type BottomNavTab = 'home' | 'directory' | 'events' | 'rewards' | 'profile';
 
 interface BottomNavigationProps {
   activeTab: BottomNavTab;
@@ -19,6 +19,11 @@ const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab, onTabPre
       key: 'directory' as BottomNavTab,
       label: 'Directory',
       icon: '📚'
+    },
+    {
+      key: 'events' as BottomNavTab,
+      label: 'Events',
+      icon: '🎉'
     },
     {
       key: 'rewards' as BottomNavTab,
