@@ -10,6 +10,7 @@ import {
   StatusBar,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import BottomNavigation, { type BottomNavTab } from '../components/BottomNavigation';
 
 interface Event {
   id: string;
@@ -84,7 +85,21 @@ const mockEvents: Event[] = [
   },
 ];
 
-const EventsScreen: React.FC = () => {
+interface EventsScreenProps {
+  onNavigateBack?: () => void;
+  onNavigateToHome?: () => void;
+  onNavigateToDirectory?: () => void;
+  onNavigateToRewards?: () => void;
+  onNavigateToProfile?: () => void;
+}
+
+const EventsScreen: React.FC<EventsScreenProps> = ({ 
+  onNavigateBack,
+  onNavigateToHome,
+  onNavigateToDirectory,
+  onNavigateToRewards,
+  onNavigateToProfile
+}) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All Events');
   const [searchQuery, setSearchQuery] = useState('');
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
@@ -165,7 +180,10 @@ const EventsScreen: React.FC = () => {
       {/* Header */}
       <View className="bg-white px-6 py-4 border-b border-gray-100">
         <View className="flex-row items-center justify-between">
-          <TouchableOpacity className="w-12 h-12 items-center justify-center rounded-full">
+          <TouchableOpacity 
+            className="w-12 h-12 items-center justify-center rounded-full"
+            onPress={onNavigateBack}
+          >
             <Ionicons name="arrow-back" size={24} color="#1F2937" />
           </TouchableOpacity>
           <View className="flex-1 mx-4">
@@ -238,29 +256,28 @@ const EventsScreen: React.FC = () => {
       </ScrollView>
 
       {/* Bottom Navigation */}
-      <View className="bg-white border-t border-gray-200 px-4 py-2 absolute bottom-0 left-0 right-0">
-        <View className="flex-row justify-around">
-          <TouchableOpacity className="items-center py-2">
-            <Ionicons name="home" size={24} color="#9CA3AF" />
-            <Text className="text-gray-400 text-xs mt-1">Home</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity className="items-center py-2">
-            <Ionicons name="calendar" size={24} color="#10B981" />
-            <Text className="text-green-500 text-xs mt-1">Events</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity className="items-center py-2">
-            <Ionicons name="heart" size={24} color="#9CA3AF" />
-            <Text className="text-gray-400 text-xs mt-1">Favorites</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity className="items-center py-2">
-            <Ionicons name="person" size={24} color="#9CA3AF" />
-            <Text className="text-gray-400 text-xs mt-1">Profile</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+      <BottomNavigation
+        activeTab="events"
+        onTabPress={(tab: BottomNavTab) => {
+          switch (tab) {
+            case 'home':
+              onNavigateToHome?.();
+              break;
+            case 'directory':
+              onNavigateToDirectory?.();
+              break;
+            case 'events':
+              // Already on events, do nothing
+              break;
+            case 'rewards':
+              onNavigateToRewards?.();
+              break;
+            case 'profile':
+              onNavigateToProfile?.();
+              break;
+          }
+        }}
+      />
     </SafeAreaView>
   );
 };
