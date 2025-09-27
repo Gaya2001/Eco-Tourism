@@ -64,6 +64,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
   const [hasChanges, setHasChanges] = useState(false);
   const [showLanguageModal, setShowLanguageModal] = useState(false);
   const [showTimezoneModal, setShowTimezoneModal] = useState(false);
+  const [showLogoutDropdown, setShowLogoutDropdown] = useState(false);
 
   const languages = [
     { label: 'English', value: 'English' },
@@ -120,6 +121,22 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
     <SafeAreaView style={{ flex: 1, backgroundColor: '#22c55e' }}>
       <StatusBar backgroundColor="#22c55e" barStyle="light-content" />
       
+      {/* Dropdown Overlay */}
+      {showLogoutDropdown && (
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 999,
+          }}
+          onPress={() => setShowLogoutDropdown(false)}
+          activeOpacity={1}
+        />
+      )}
+      
       {/* Header */}
       <View style={{ backgroundColor: '#22c55e', paddingHorizontal: 16, paddingBottom: 24 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 32, paddingTop: 8 }}>
@@ -130,12 +147,52 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({
             <Text style={{ color: 'white', fontSize: 24, fontWeight: 'bold' }}>←</Text>
           </TouchableOpacity>
           <Text style={{ color: 'white', fontSize: 18, fontWeight: '600' }}>Profile</Text>
-          <TouchableOpacity 
-            style={{ padding: 8 }}
-            onPress={onLogout}
-          >
-            <Text style={{ color: 'white', fontSize: 20 }}>⋮</Text>
-          </TouchableOpacity>
+          <View style={{ position: 'relative' }}>
+            <TouchableOpacity 
+              style={{ padding: 8 }}
+              onPress={() => setShowLogoutDropdown(!showLogoutDropdown)}
+            >
+              <Text style={{ color: 'white', fontSize: 20 }}>⋮</Text>
+            </TouchableOpacity>
+            
+            {/* Logout Dropdown */}
+            {showLogoutDropdown && (
+              <View style={{
+                position: 'absolute',
+                top: 40,
+                right: 0,
+                backgroundColor: 'white',
+                borderRadius: 8,
+                shadowColor: '#000',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.25,
+                shadowRadius: 4,
+                elevation: 5,
+                minWidth: 120,
+                zIndex: 1000,
+              }}>
+                <TouchableOpacity
+                  style={{
+                    padding: 12,
+                    borderRadius: 8,
+                  }}
+                  onPress={() => {
+                    setShowLogoutDropdown(false);
+                    onLogout && onLogout();
+                  }}
+                >
+                  <Text style={{ 
+                    color: '#dc2626', 
+                    fontSize: 16, 
+                    fontWeight: '500',
+                    textAlign: 'center'
+                  }}>
+                    Logout
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
         </View>
 
         {/* Profile Info */}

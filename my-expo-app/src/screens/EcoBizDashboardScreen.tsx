@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -31,14 +31,18 @@ interface EcoBizDashboardProps {
   hasCompletedBusinessRegistration?: boolean;
   onStartBusinessRegistration?: () => void;
   onNavigateToCertificationStatus?: () => void;
+  onLogout?: () => void;
 }
 
 const EcoBizDashboardScreen: React.FC<EcoBizDashboardProps> = ({ 
   user, 
   hasCompletedBusinessRegistration = false, 
   onStartBusinessRegistration,
-  onNavigateToCertificationStatus
+  onNavigateToCertificationStatus,
+  onLogout
 }) => {
+  const [showLogoutDropdown, setShowLogoutDropdown] = useState(false);
+
   const certificationProgress: CertificationProgress[] = [
     {
       id: '1',
@@ -148,6 +152,22 @@ const EcoBizDashboardScreen: React.FC<EcoBizDashboardProps> = ({
   return (
     <SafeAreaView className="flex-1 bg-gray-50">
       <StatusBar barStyle="dark-content" backgroundColor="#FFFFFF" />
+      
+      {/* Dropdown Overlay */}
+      {showLogoutDropdown && (
+        <TouchableOpacity
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 999,
+          }}
+          onPress={() => setShowLogoutDropdown(false)}
+          activeOpacity={1}
+        />
+      )}
 
       {/* Header */}
       <View className="bg-white px-5 py-4">
@@ -165,10 +185,53 @@ const EcoBizDashboardScreen: React.FC<EcoBizDashboardProps> = ({
             <TouchableOpacity className="w-10 h-10 items-center justify-center mr-2">
               <Ionicons name="notifications-outline" size={24} color="#374151" />
             </TouchableOpacity>
-            <TouchableOpacity className="w-10 h-10 bg-orange-500 rounded-full items-center justify-center relative">
-              <View className="w-3 h-3 bg-red-500 rounded-full absolute -top-1 -right-1 border-2 border-white" />
-              <Ionicons name="person" size={18} color="white" />
-            </TouchableOpacity>
+            <View style={{ position: 'relative' }}>
+              <TouchableOpacity 
+                className="w-10 h-10 bg-orange-500 rounded-full items-center justify-center relative"
+                onPress={() => setShowLogoutDropdown(!showLogoutDropdown)}
+              >
+                <View className="w-3 h-3 bg-red-500 rounded-full absolute -top-1 -right-1 border-2 border-white" />
+                <Ionicons name="person" size={18} color="white" />
+              </TouchableOpacity>
+              
+              {/* Logout Dropdown */}
+              {showLogoutDropdown && (
+                <View style={{
+                  position: 'absolute',
+                  top: 45,
+                  right: 0,
+                  backgroundColor: 'white',
+                  borderRadius: 8,
+                  shadowColor: '#000',
+                  shadowOffset: { width: 0, height: 2 },
+                  shadowOpacity: 0.25,
+                  shadowRadius: 4,
+                  elevation: 5,
+                  minWidth: 120,
+                  zIndex: 1000,
+                }}>
+                  <TouchableOpacity
+                    style={{
+                      padding: 12,
+                      borderRadius: 8,
+                    }}
+                    onPress={() => {
+                      setShowLogoutDropdown(false);
+                      onLogout && onLogout();
+                    }}
+                  >
+                    <Text style={{ 
+                      color: '#dc2626', 
+                      fontSize: 16, 
+                      fontWeight: '500',
+                      textAlign: 'center'
+                    }}>
+                      Logout
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </View>
           </View>
         </View>
       </View>

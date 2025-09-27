@@ -5,8 +5,8 @@ import {
   OnboardingScreen, 
   RoleSelectionScreen, 
   SignUpScreen, 
-  SignInScreen, 
-  DashboardScreen,
+  SignInScreen,
+  HomeScreen,
   EcoBizDashboardScreen,
   BusinessRegistrationStep1,
   BusinessRegistrationStep2,
@@ -14,10 +14,17 @@ import {
   BusinessRegistrationStep4,
   WelcomeScreen,
   CertificationStatusScreen,
+  DirectoryScreen,
+  EcoRewardsScreen,
+  NotificationsScreen,
+  ProfileScreen,
+  HotelDetailScreen,
+  ReviewsScreen,
+  EventsScreen,
 } from '../screens';
 import { Colors } from '../constants';
 
-type AppFlowState = 'splash' | 'onboarding' | 'welcome' | 'roleSelection' | 'signUp' | 'signIn' | 'dashboard' | 'bizDashboard' | 'businessRegistration1' | 'businessRegistration2' | 'businessRegistration3' | 'businessRegistration4' | 'certificationStatus';
+type AppFlowState = 'splash' | 'onboarding' | 'welcome' | 'roleSelection' | 'signUp' | 'signIn' | 'home' | 'bizDashboard' | 'businessRegistration1' | 'businessRegistration2' | 'businessRegistration3' | 'businessRegistration4' | 'certificationStatus' | 'directory' | 'rewards' | 'notifications' | 'profile' | 'hotelDetail' | 'reviews' | 'events';
 
 interface User {
   id: string;
@@ -32,6 +39,7 @@ const AppFlow: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasCompletedBusinessRegistration, setHasCompletedBusinessRegistration] = useState(false);
   const [businessRegistrationData, setBusinessRegistrationData] = useState<Record<string, any>>({});
+  const [selectedBusinessId, setSelectedBusinessId] = useState<string | null>(null);
 
   const handleOnboardingComplete = () => {
     setCurrentFlow('welcome');
@@ -59,7 +67,7 @@ const AppFlow: React.FC = () => {
       if (userData.role === 'businessman') {
         setCurrentFlow('bizDashboard');
       } else {
-        setCurrentFlow('dashboard');
+        setCurrentFlow('home');
       }
     } catch (error) {
       console.error('Sign up error:', error);
@@ -91,7 +99,7 @@ const AppFlow: React.FC = () => {
       if (role === 'businessman') {
         setCurrentFlow('bizDashboard');
       } else {
-        setCurrentFlow('dashboard');
+        setCurrentFlow('home');
       }
     } catch (error) {
       console.error('Sign in error:', error);
@@ -119,6 +127,48 @@ const AppFlow: React.FC = () => {
 
   const handleNavigateToCertificationStatus = () => {
     setCurrentFlow('certificationStatus');
+  };
+
+  const handleNavigateToProfile = () => {
+    setCurrentFlow('profile');
+  };
+
+  const handleNavigateToNotifications = () => {
+    setCurrentFlow('notifications');
+  };
+
+  const handleNavigateToDirectory = () => {
+    setCurrentFlow('directory');
+  };
+
+  const handleNavigateToRewards = () => {
+    setCurrentFlow('rewards');
+  };
+
+  const handleNavigateToHotelDetail = (businessId: string) => {
+    setSelectedBusinessId(businessId);
+    setCurrentFlow('hotelDetail');
+  };
+
+  const handleNavigateToReviews = () => {
+    setCurrentFlow('reviews');
+  };
+
+  const handleNavigateToEvents = () => {
+    setCurrentFlow('events');
+  };
+
+  const handleNavigateBack = () => {
+    setCurrentFlow('home');
+  };
+
+  const handleLogout = () => {
+    // Clear user state and navigate to welcome screen
+    setUser(null);
+    setHasCompletedBusinessRegistration(false);
+    setBusinessRegistrationData({});
+    setSelectedBusinessId(null);
+    setCurrentFlow('welcome');
   };
 
   if (isLoading) {
@@ -173,7 +223,8 @@ const AppFlow: React.FC = () => {
           onNavigateToProfile={handleNavigateToProfile}
           onNavigateToNotifications={handleNavigateToNotifications}
           onNavigateToDirectory={handleNavigateToDirectory}
-          onNavigateToRewards={() => setCurrentFlow('rewards')}
+          onNavigateToRewards={handleNavigateToRewards}
+          onNavigateToEvents={handleNavigateToEvents}
         />
       );
 
@@ -183,22 +234,62 @@ const AppFlow: React.FC = () => {
           onNavigateBack={handleNavigateBack}
           onNavigateToHome={() => setCurrentFlow('home')}
           onNavigateToProfile={handleNavigateToProfile}
-          onNavigateToRewards={() => setCurrentFlow('rewards')}
-          onNavigateToHotelDetail={(businessId: string) => {
-            setSelectedBusinessId(businessId);
-            setCurrentFlow('hotelDetail');
-          }}
+          onNavigateToRewards={handleNavigateToRewards}
+          onNavigateToHotelDetail={handleNavigateToHotelDetail}
         />
       );
 
-    case 'dashboard':
+    case 'rewards':
       return (
-        <DashboardScreen 
-          user={{
-            name: user?.name || 'User',
-            level: 3,
-            ecoPoints: 1250,
-          }}
+        <EcoRewardsScreen 
+          onNavigateBack={handleNavigateBack}
+          onNavigateToHome={() => setCurrentFlow('home')}
+          onNavigateToDirectory={handleNavigateToDirectory}
+          onNavigateToProfile={handleNavigateToProfile}
+        />
+      );
+
+    case 'notifications':
+      return (
+        <NotificationsScreen 
+          onNavigateBack={handleNavigateBack}
+        />
+      );
+
+    case 'profile':
+      return (
+        <ProfileScreen 
+          onNavigateBack={handleNavigateBack}
+          onLogout={handleLogout}
+          onNavigateToHome={() => setCurrentFlow('home')}
+          onNavigateToDirectory={handleNavigateToDirectory}
+          onNavigateToRewards={handleNavigateToRewards}
+        />
+      );
+
+    case 'hotelDetail':
+      return (
+        <HotelDetailScreen 
+          onNavigateBack={handleNavigateBack}
+          onNavigateToReviews={handleNavigateToReviews}
+        />
+      );
+
+    case 'reviews':
+      return (
+        <ReviewsScreen 
+          onNavigateBack={handleNavigateBack}
+        />
+      );
+
+    case 'events':
+      return (
+        <EventsScreen 
+          onNavigateBack={handleNavigateBack}
+          onNavigateToHome={() => setCurrentFlow('home')}
+          onNavigateToDirectory={handleNavigateToDirectory}
+          onNavigateToRewards={handleNavigateToRewards}
+          onNavigateToProfile={handleNavigateToProfile}
         />
       );
     
@@ -211,6 +302,7 @@ const AppFlow: React.FC = () => {
           hasCompletedBusinessRegistration={hasCompletedBusinessRegistration}
           onStartBusinessRegistration={handleStartBusinessRegistration}
           onNavigateToCertificationStatus={handleNavigateToCertificationStatus}
+          onLogout={handleLogout}
         />
       );
     
