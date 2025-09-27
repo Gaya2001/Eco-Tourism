@@ -11,6 +11,7 @@ import {
   Dimensions,
   ScrollView,
   ImageBackground,
+  Modal,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
@@ -26,7 +27,7 @@ interface SignUpScreenProps {
 }
 
 const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onNavigateToSignIn }) => {
-  const [role, setRole] = useState<'tourist' | 'business'>('tourist');
+  const [role, setRole] = useState<'tourist' | 'businessman'>('tourist');
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -35,15 +36,40 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onNavigateToSignI
   const [isLoading, setIsLoading] = useState(false);
   const [interests, setInterests] = useState<string[]>([]);
   const [tosChecked, setTosChecked] = useState(false);
-  // Business-specific fields
-  const [businessName, setBusinessName] = useState('');
-  const [hotelAddress, setHotelAddress] = useState('');
-  const [numRooms, setNumRooms] = useState('');
-  const [website, setWebsite] = useState('');
-  const [amenities, setAmenities] = useState<string[]>([]);
+  const [preferredDestinations, setPreferredDestinations] = useState<string[]>([]);
+  const [showDestinationsDropdown, setShowDestinationsDropdown] = useState(false);
+  // Businessman-specific fields
+  const [businessCategory, setBusinessCategory] = useState('');
+  const [experience, setExperience] = useState('');
+  const [specialization, setSpecialization] = useState<string[]>([]);
+  const [professionalGoals, setProfessionalGoals] = useState<string[]>([]);
 
   const toggleInterest = (key: string) => {
     setInterests(prev => prev.includes(key) ? prev.filter(i => i !== key) : [...prev, key]);
+  };
+
+  const toggleDestination = (destination: string) => {
+    setPreferredDestinations(prev => 
+      prev.includes(destination) 
+        ? prev.filter(d => d !== destination) 
+        : [...prev, destination]
+    );
+  };
+
+  const toggleSpecialization = (spec: string) => {
+    setSpecialization(prev => 
+      prev.includes(spec) 
+        ? prev.filter(s => s !== spec) 
+        : [...prev, spec]
+    );
+  };
+
+  const toggleProfessionalGoal = (goal: string) => {
+    setProfessionalGoals(prev => 
+      prev.includes(goal) 
+        ? prev.filter(g => g !== goal) 
+        : [...prev, goal]
+    );
   };
 
   const validateForm = () => {
@@ -53,10 +79,13 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onNavigateToSignI
     if (!phone.trim()) { Alert.alert('Error', 'Phone number is required'); return false; }
     if (password.length < 6) { Alert.alert('Error', 'Password must be at least 6 characters'); return false; }
     if (!tosChecked) { Alert.alert('Error', 'You must accept Terms of Service'); return false; }
-    if (role === 'business') {
-      if (!businessName.trim()) { Alert.alert('Error', 'Business / Hotel name is required'); return false; }
-      if (!hotelAddress.trim()) { Alert.alert('Error', 'Hotel address is required'); return false; }
+    
+    // Role-specific validation
+    if (role === 'businessman') {
+      if (!businessCategory.trim()) { Alert.alert('Error', 'Business category is required'); return false; }
+      if (!experience.trim()) { Alert.alert('Error', 'Years of experience is required'); return false; }
     }
+    
     return true;
   };
 
@@ -65,16 +94,18 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onNavigateToSignI
     setIsLoading(true);
     try {
       await new Promise(res => setTimeout(res, 1500));
-      const payload: any = { fullName, email, phone, role, interests };
-      if (role === 'business') {
-        payload.business = {
-          name: businessName,
-          address: hotelAddress,
-          rooms: numRooms,
-          website,
-          amenities,
-        };
+      const payload: any = { fullName, email, phone, role };
+      
+      if (role === 'tourist') {
+        payload.interests = interests;
+        payload.preferredDestinations = preferredDestinations;
+      } else if (role === 'businessman') {
+        payload.businessCategory = businessCategory;
+        payload.experience = experience;
+        payload.specialization = specialization;
+        payload.professionalGoals = professionalGoals;
       }
+      
       onSignUp(payload);
     } catch {
       Alert.alert('Error', 'Failed to create account.');
@@ -108,7 +139,12 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onNavigateToSignI
                   <Ionicons name="home" size={isSmallScreen ? 24 : 28} color="#ffffff" />
                 </View>
                 <Text style={styles.title}>EcoVenture</Text>
-                <Text style={styles.subtitle}>Join our green community!</Text>
+                <Text style={styles.subtitle}>
+                  {role === 'tourist' 
+                    ? 'Join our green community as a traveler!' 
+                    : 'Join our business network for sustainable tourism!'
+                  }
+                </Text>
               </View>
 
               {/* Form */}
@@ -124,11 +160,11 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onNavigateToSignI
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    style={[styles.roleButton, role === 'business' && styles.roleButtonActive]}
-                    onPress={() => setRole('business')}
+                    style={[styles.roleButton, role === 'businessman' && styles.roleButtonActive]}
+                    onPress={() => setRole('businessman')}
                   >
-                    <Ionicons name="briefcase" size={16} color={role === 'business' ? '#fff' : '#6B7280'} />
-                    <Text style={[styles.roleText, role === 'business' && styles.roleTextActive]}>Business</Text>
+                    <Ionicons name="briefcase" size={16} color={role === 'businessman' ? '#fff' : '#6B7280'} />
+                    <Text style={[styles.roleText, role === 'businessman' && styles.roleTextActive]}>Businessman</Text>
                   </TouchableOpacity>
                 </View>
 
@@ -170,70 +206,108 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onNavigateToSignI
                   </View>
                 </View>
 
-                {/* Travel Interests */}
-                <View style={styles.inputGroupNew}>
-                  <Text style={styles.label}>Travel Interests</Text>
-                  <View style={styles.interestsRow}>
-                    {['Adventure','Wildlife','Nature','Cultural'].map(i => (
-                      <TouchableOpacity key={i} style={[styles.chip, interests.includes(i) && styles.chipActive]} onPress={() => toggleInterest(i)}>
-                        <Text style={[styles.chipText, interests.includes(i) && styles.chipTextActive]}>{i}</Text>
-                      </TouchableOpacity>
-                    ))}
-                  </View>
-                </View>
-
-                {/* Preferred Destinations (placeholder) */}
-                <View style={styles.inputGroupNew}>
-                  <Text style={styles.label}>Preferred Destinations</Text>
-                  <TouchableOpacity style={styles.dropdown}>
-                    <Text style={styles.dropdownText}>Select preferred regions</Text>
-                    <Ionicons name="chevron-down" size={18} color="#6B7280" />
-                  </TouchableOpacity>
-                </View>
-
-                {/* Business specific fields */}
-                {role === 'business' && (
+                {/* Role-specific fields */}
+                {role === 'tourist' ? (
                   <>
+                    {/* Travel Interests */}
                     <View style={styles.inputGroupNew}>
-                      <Text style={styles.label}>Business / Hotel Name</Text>
-                      <View style={styles.inputContainerNew}>
-                        <TextInput style={styles.textInputNew} placeholder="Hotel or business name" value={businessName} onChangeText={setBusinessName} />
-                      </View>
-                    </View>
-
-                    <View style={styles.inputGroupNew}>
-                      <Text style={styles.label}>Hotel Address</Text>
-                      <View style={styles.inputContainerNew}>
-                        <TextInput style={styles.textInputNew} placeholder="Street, city, country" value={hotelAddress} onChangeText={setHotelAddress} />
-                      </View>
-                    </View>
-
-                    <View style={styles.inputGroupNew}>
-                      <Text style={styles.label}>Number of Rooms</Text>
-                      <View style={styles.inputContainerNew}>
-                        <TextInput style={styles.textInputNew} placeholder="e.g. 20" value={numRooms} onChangeText={setNumRooms} keyboardType="numeric" />
-                      </View>
-                    </View>
-
-                    <View style={styles.inputGroupNew}>
-                      <Text style={styles.label}>Website</Text>
-                      <View style={styles.inputContainerNew}>
-                        <TextInput style={styles.textInputNew} placeholder="https://yoursite.com" value={website} onChangeText={setWebsite} keyboardType="url" />
-                      </View>
-                    </View>
-
-                    <View style={styles.inputGroupNew}>
-                      <Text style={styles.label}>Amenities</Text>
+                      <Text style={styles.label}>Travel Interests</Text>
                       <View style={styles.interestsRow}>
-                        {['Free Breakfast','Wifi','Pool','Parking','Pet Friendly'].map(a => (
-                          <TouchableOpacity key={a} style={[styles.chip, amenities.includes(a) && styles.chipActive]} onPress={() => setAmenities(prev => prev.includes(a) ? prev.filter(x => x !== a) : [...prev, a])}>
-                            <Text style={[styles.chipText, amenities.includes(a) && styles.chipTextActive]}>{a}</Text>
+                        {['Adventure','Wildlife','Nature','Cultural'].map(i => (
+                          <TouchableOpacity key={i} style={[styles.chip, interests.includes(i) && styles.chipActive]} onPress={() => toggleInterest(i)}>
+                            <Text style={[styles.chipText, interests.includes(i) && styles.chipTextActive]}>{i}</Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </View>
+
+                    {/* Preferred Destinations */}
+                    <View style={styles.inputGroupNew}>
+                      <Text style={styles.label}>Preferred Destinations</Text>
+                      <TouchableOpacity 
+                        style={styles.dropdown} 
+                        onPress={() => setShowDestinationsDropdown(true)}
+                      >
+                        <Text style={[styles.dropdownText, preferredDestinations.length > 0 && styles.dropdownTextSelected]}>
+                          {preferredDestinations.length > 0 
+                            ? `${preferredDestinations.length} destination${preferredDestinations.length > 1 ? 's' : ''} selected`
+                            : 'Select preferred destinations in Sri Lanka'
+                          }
+                        </Text>
+                        <Ionicons 
+                          name="location-outline" 
+                          size={18} 
+                          color="#6B7280" 
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    {/* Business Category */}
+                    <View style={styles.inputGroupNew}>
+                      <Text style={styles.label}>Business Category</Text>
+                      <View style={styles.inputContainerNew}>
+                        <TextInput 
+                          style={styles.textInputNew} 
+                          placeholder="e.g., Hospitality, Travel Agency, Transport" 
+                          value={businessCategory} 
+                          onChangeText={setBusinessCategory} 
+                        />
+                        <Ionicons name="business-outline" size={18} color="#9CA3AF" />
+                      </View>
+                    </View>
+
+                    {/* Years of Experience */}
+                    <View style={styles.inputGroupNew}>
+                      <Text style={styles.label}>Years of Experience</Text>
+                      <View style={styles.inputContainerNew}>
+                        <TextInput 
+                          style={styles.textInputNew} 
+                          placeholder="e.g., 5 years" 
+                          value={experience} 
+                          onChangeText={setExperience} 
+                          keyboardType="numeric"
+                        />
+                        <Ionicons name="time-outline" size={18} color="#9CA3AF" />
+                      </View>
+                    </View>
+
+                    {/* Business Specialization */}
+                    <View style={styles.inputGroupNew}>
+                      <Text style={styles.label}>Business Specialization</Text>
+                      <View style={styles.interestsRow}>
+                        {['Eco Hotels','Tour Guiding','Transportation','Event Planning','Local Crafts','Food & Beverage'].map(spec => (
+                          <TouchableOpacity 
+                            key={spec} 
+                            style={[styles.chip, specialization.includes(spec) && styles.chipActive]} 
+                            onPress={() => toggleSpecialization(spec)}
+                          >
+                            <Text style={[styles.chipText, specialization.includes(spec) && styles.chipTextActive]}>{spec}</Text>
+                          </TouchableOpacity>
+                        ))}
+                      </View>
+                    </View>
+
+                    {/* Professional Goals */}
+                    <View style={styles.inputGroupNew}>
+                      <Text style={styles.label}>Professional Goals</Text>
+                      <View style={styles.interestsRow}>
+                        {['Expand Business','Network Building','Learn Best Practices','Sustainable Tourism','Digital Marketing','Partnership Opportunities'].map(goal => (
+                          <TouchableOpacity 
+                            key={goal} 
+                            style={[styles.chip, professionalGoals.includes(goal) && styles.chipActive]} 
+                            onPress={() => toggleProfessionalGoal(goal)}
+                          >
+                            <Text style={[styles.chipText, professionalGoals.includes(goal) && styles.chipTextActive]}>{goal}</Text>
                           </TouchableOpacity>
                         ))}
                       </View>
                     </View>
                   </>
                 )}
+
+
 
                 {/* TOS */}
                 <View style={styles.tosRow}>
@@ -270,6 +344,69 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onNavigateToSignI
           </ScrollView>
         </KeyboardAvoidingView>
       </SafeAreaView>
+
+      {/* Destinations Selection Modal - Only for Tourists */}
+      {role === 'tourist' && (
+        <Modal
+          visible={showDestinationsDropdown}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setShowDestinationsDropdown(false)}
+        >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContainer}>
+            <View style={styles.modalHeader}>
+              <Text style={styles.modalTitle}>Select Preferred Destinations</Text>
+              <TouchableOpacity 
+                onPress={() => setShowDestinationsDropdown(false)}
+                style={styles.modalCloseButton}
+              >
+                <Ionicons name="close" size={24} color="#6B7280" />
+              </TouchableOpacity>
+            </View>
+            
+            <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
+              <Text style={styles.modalSubtitle}>Choose your favorite places to visit in Sri Lanka:</Text>
+              
+              <View style={styles.destinationsGrid}>
+                {['Colombo', 'Kandy', 'Galle', 'Nuwara Eliya', 'Sigiriya', 'Anuradhapura', 'Polonnaruwa', 'Ella', 'Bentota', 'Mirissa', 'Yala National Park', 'Arugam Bay'].map(destination => (
+                  <TouchableOpacity
+                    key={destination}
+                    style={[styles.destinationCard, preferredDestinations.includes(destination) && styles.destinationCardSelected]}
+                    onPress={() => toggleDestination(destination)}
+                  >
+                    <View style={styles.destinationCardContent}>
+                      <Ionicons 
+                        name="location" 
+                        size={20} 
+                        color={preferredDestinations.includes(destination) ? "#22C55E" : "#6B7280"} 
+                      />
+                      <Text style={[styles.destinationCardText, preferredDestinations.includes(destination) && styles.destinationCardTextSelected]}>
+                        {destination}
+                      </Text>
+                      {preferredDestinations.includes(destination) && (
+                        <Ionicons name="checkmark-circle" size={18} color="#22C55E" />
+                      )}
+                    </View>
+                  </TouchableOpacity>
+                ))}
+              </View>
+            </ScrollView>
+            
+            <View style={styles.modalFooter}>
+              <TouchableOpacity 
+                style={styles.modalDoneButton}
+                onPress={() => setShowDestinationsDropdown(false)}
+              >
+                <Text style={styles.modalDoneButtonText}>
+                  Done ({preferredDestinations.length} selected)
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+      )}
     </ImageBackground>
   );
 };
@@ -522,6 +659,102 @@ const styles = StyleSheet.create({
   },
   dropdownText: {
     color: '#6B7280'
+  },
+  dropdownTextSelected: {
+    color: '#22C55E',
+    fontWeight: '600'
+  },
+  // Modal Styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'flex-end',
+  },
+  modalContainer: {
+    backgroundColor: '#ffffff',
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
+    maxHeight: '80%',
+    minHeight: '60%',
+  },
+  modalHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F3F4F6',
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1F2937',
+  },
+  modalCloseButton: {
+    padding: 4,
+  },
+  modalContent: {
+    flex: 1,
+    paddingHorizontal: 20,
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    color: '#6B7280',
+    marginVertical: 16,
+    textAlign: 'center',
+  },
+  destinationsGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 12,
+    paddingBottom: 20,
+  },
+  destinationCard: {
+    width: '47%',
+    backgroundColor: '#F9FAFB',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    padding: 12,
+    minHeight: 60,
+  },
+  destinationCardSelected: {
+    backgroundColor: '#F0FDF4',
+    borderColor: '#22C55E',
+  },
+  destinationCardContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  destinationCardText: {
+    fontSize: 13,
+    color: '#374151',
+    fontWeight: '500',
+    flex: 1,
+    marginLeft: 8,
+  },
+  destinationCardTextSelected: {
+    color: '#22C55E',
+    fontWeight: '600',
+  },
+  modalFooter: {
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderTopColor: '#F3F4F6',
+  },
+  modalDoneButton: {
+    backgroundColor: '#22C55E',
+    borderRadius: 12,
+    paddingVertical: 14,
+    alignItems: 'center',
+  },
+  modalDoneButtonText: {
+    color: '#ffffff',
+    fontSize: 16,
+    fontWeight: '600',
   },
   tosRow: {
     flexDirection: 'row',
