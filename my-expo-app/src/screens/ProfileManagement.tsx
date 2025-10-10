@@ -5,9 +5,9 @@ import {
     StyleSheet,
     TouchableOpacity,
     ScrollView,
+    TextInput,
     SafeAreaView,
     Image,
-    TextInput,
     Switch,
     Platform,
 } from 'react-native';

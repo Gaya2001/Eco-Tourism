@@ -17,6 +17,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 // constants not used in this screen
+import { Config } from '../constants';
 
 const { width } = Dimensions.get('window');
 const isSmallScreen = width < 380;
@@ -31,6 +32,7 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onNavigateToSignI
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -94,19 +96,96 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onNavigateToSignI
     setIsLoading(true);
     try {
       await new Promise(res => setTimeout(res, 1500));
-      const payload: any = { fullName, email, phone, role };
-      
+      // split fullName into firstName/lastName
+      const names = fullName.trim().split(' ');
+      const firstName = names.shift() || '';
+      const lastName = names.join(' ') || '';
+
+      // Build payload according to role.
+      // For tourists send only the fields the backend expects for tourist
+      // registration to match your example JSON.
+      let payload: any;
       if (role === 'tourist') {
-        payload.interests = interests;
-        payload.preferredDestinations = preferredDestinations;
-      } else if (role === 'businessman') {
-        payload.businessCategory = businessCategory;
-        payload.experience = experience;
-        payload.specialization = specialization;
-        payload.professionalGoals = professionalGoals;
+        payload = {
+          firstName,
+          lastName,
+          email,
+          password,
+          role,
+          phone,
+          dateOfBirth: dateOfBirth || null,
+          interests: Array.isArray(interests) ? interests : [],
+          preferredDestinations: Array.isArray(preferredDestinations) ? preferredDestinations : [],
+        };
+      } else {
+        // Businessman: send business-specific fields too
+        payload = {
+          firstName,
+          lastName,
+          email,
+          phone,
+          role,
+          password,
+          dateOfBirth: dateOfBirth || null,
+          // Business fields (may be null)
+          businessCategory: businessCategory || null,
+          experience: experience || null,
+          specialization: Array.isArray(specialization) ? specialization : [],
+          professionalGoals: Array.isArray(professionalGoals) ? professionalGoals : [],
+        };
       }
       
-      onSignUp(payload);
+      // send to backend
+      // If the backend separates businessman registration into a different
+      // endpoint, try that first and fall back to the generic signup route.
+      const base = Config.API_BASE_URL; // includes /api
+      const genericEndpoint = `${base}/auth/signup`;
+      const businessmanEndpoint = `${base}/auth/business/signup`;
+
+      const tryPost = async (targetUrl: string) => {
+        const resp = await fetch(targetUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const body = await resp.json().catch(() => ({}));
+        return { resp, body, url: targetUrl };
+      };
+
+      try {
+        let result;
+        if (role === 'businessman') {
+          // try businessman-specific route first
+          try {
+            result = await tryPost(businessmanEndpoint);
+            // if route not found, fall back
+            if (result.resp.status === 404) {
+              console.warn('Businessman endpoint not found, falling back to generic signup', businessmanEndpoint);
+              result = await tryPost(genericEndpoint);
+            }
+          } catch (err) {
+            // network or other error when posting to businessman route -> fallback
+            console.warn('Error posting to businessman endpoint, falling back', { err });
+            result = await tryPost(genericEndpoint);
+          }
+        } else {
+          result = await tryPost(genericEndpoint);
+        }
+
+        const { resp, body, url: usedUrl } = result;
+        if (!resp.ok) {
+          console.error('Sign up failed', { url: usedUrl, status: resp.status, body });
+          Alert.alert('Sign Up Failed', body.message || `Server returned ${resp.status}`);
+        } else {
+          console.log('Sign up success', { url: usedUrl, body });
+          Alert.alert('Success', 'Account created successfully');
+          onSignUp(body.data?.user || payload);
+        }
+      } catch (networkErr: any) {
+        console.error('Network error while calling signup', { error: networkErr });
+        const msg = networkErr?.message || String(networkErr);
+        Alert.alert('Network Error', `Unable to reach server (${msg}). Please check network and try again.`);
+      }
     } catch {
       Alert.alert('Error', 'Failed to create account.');
     } finally {
@@ -209,6 +288,14 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onNavigateToSignI
                 {/* Role-specific fields */}
                 {role === 'tourist' ? (
                   <>
+                    {/* Date of Birth */}
+                    <View style={styles.inputGroupNew}>
+                      <Text style={styles.label}>Date of Birth</Text>
+                      <View style={styles.inputContainerNew}>
+                        <TextInput style={styles.textInputNew} placeholder="YYYY-MM-DD" value={dateOfBirth} onChangeText={setDateOfBirth} />
+                        <Ionicons name="calendar" size={18} color="#9CA3AF" />
+                      </View>
+                    </View>
                     {/* Travel Interests */}
                     <View style={styles.inputGroupNew}>
                       <Text style={styles.label}>Travel Interests</Text>
@@ -270,6 +357,15 @@ const SignUpScreen: React.FC<SignUpScreenProps> = ({ onSignUp, onNavigateToSignI
                           keyboardType="numeric"
                         />
                         <Ionicons name="time-outline" size={18} color="#9CA3AF" />
+                      </View>
+                    </View>
+
+                    {/* Date of Birth for business owner */}
+                    <View style={styles.inputGroupNew}>
+                      <Text style={styles.label}>Date of Birth</Text>
+                      <View style={styles.inputContainerNew}>
+                        <TextInput style={styles.textInputNew} placeholder="YYYY-MM-DD" value={dateOfBirth} onChangeText={setDateOfBirth} />
+                        <Ionicons name="calendar" size={18} color="#9CA3AF" />
                       </View>
                     </View>
 

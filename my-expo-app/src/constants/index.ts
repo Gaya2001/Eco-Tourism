@@ -1,3 +1,5 @@
+import { Platform } from 'react-native';
+
 // App Colors
 export const Colors = {
   primary: {
@@ -124,11 +126,17 @@ export const Theme = {
 };
 
 // App Configuration
+// Hosted backend (Vercel)
+const hostedApi = 'https://backend-khaki-five-25.vercel.app/api';
+
+// Local dev backend (if you run it locally)
+const localDevHost = Platform.OS === 'android' ? 'http://10.0.2.2:3000/api' : 'http://localhost:3000/api';
+
 export const Config = {
   APP_NAME: 'EcoTourism',
-  API_BASE_URL: __DEV__ 
-    ? 'http://localhost:3000/api' 
-    : 'https://api.ecotourism.com',
+  // By default use the hosted backend. To force local backend, set
+  // USE_LOCAL_BACKEND=true in your Metro/Expo environment or change this file.
+  API_BASE_URL: process.env.USE_LOCAL_BACKEND === 'true' ? localDevHost : hostedApi,
   DEFAULT_CURRENCY: 'USD',
   DEFAULT_LANGUAGE: 'en',
   ITEMS_PER_PAGE: 10,

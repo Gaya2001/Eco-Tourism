@@ -7,11 +7,11 @@ import {
   Image,
   Switch,
   TextInput,
-  SafeAreaView,
   StatusBar,
   Modal,
   FlatList,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomNavigation, { type BottomNavTab } from '../components/BottomNavigation';
 
 interface EcoBadge {

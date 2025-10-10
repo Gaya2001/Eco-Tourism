@@ -5,12 +5,12 @@ import {
   ScrollView,
   TouchableOpacity,
   Image,
-  SafeAreaView,
   StatusBar,
   Modal,
   TextInput,
   Alert,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface ReviewsScreenProps {
   onNavigateBack?: () => void;
@@ -573,9 +573,9 @@ const ReviewsScreen: React.FC<ReviewsScreenProps> = ({ onNavigateBack }) => {
                   <Text style={{
                     fontSize: 12,
                     color: '#92400e',
-                    marginTop: 4
+                    marginTop: 6
                   }}>
-                    Review mentions potential service delays. We're investigating this matter.
+                    This review has been reported for violating community guidelines.
                   </Text>
                 </View>
               )}
